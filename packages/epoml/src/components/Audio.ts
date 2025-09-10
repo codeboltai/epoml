@@ -79,22 +79,21 @@ export function Audio(props: AudioProps): Component {
   if (syntax === 'multimedia') {
     // For multimedia syntax, create a data URL
     const dataUrl = `data:${mimeType || 'audio/mpeg'};base64,${audioData}`;
-    
-    if (syntax === 'html') {
-      return Epoml.createElement('audio', { 
-        src: dataUrl, 
-        controls: true,
-        style: getPositionStyle(position)
-      }, children || []);
-    } else if (syntax === 'markdown') {
-      // Markdown doesn't have native audio support, so use HTML
-      return Epoml.createElement('span', {}, `<audio src="${dataUrl}" controls></audio>`);
-    } else {
-      // For other syntaxes or default multimedia, return a descriptive text
-      return Epoml.createElement('span', {}, `[Audio: ${mimeType || 'audio/mpeg'}]`);
-    }
+    // For multimedia, return a descriptive text since we can't actually play audio in text output
+    return Epoml.createElement('span', {}, `[Audio: ${mimeType || 'audio/mpeg'}]`);
+  } else if (syntax === 'html') {
+    const dataUrl = `data:${mimeType || 'audio/mpeg'};base64,${audioData}`;
+    return Epoml.createElement('audio', { 
+      src: dataUrl, 
+      controls: true,
+      style: getPositionStyle(position)
+    }, ...(children || []));
+  } else if (syntax === 'markdown') {
+    const dataUrl = `data:${mimeType || 'audio/mpeg'};base64,${audioData}`;
+    // Markdown doesn't have native audio support, so use HTML
+    return Epoml.createElement('span', {}, `<audio src="${dataUrl}" controls></audio>`);
   } else {
-    // For non-multimedia syntax, show alt text or descriptive text
+    // For other syntaxes, show alt text or descriptive text
     if (alt) {
       return Epoml.createElement('span', {}, alt);
     }

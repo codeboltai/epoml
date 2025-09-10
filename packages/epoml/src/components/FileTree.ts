@@ -2,9 +2,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Epoml, Component } from '../epoml';
 
-export function FileTree({ depth = 1 }: { depth?: number }): Component {
+export function FileTree({ depth = 1, directory }: { depth?: number; directory?: string }): Component {
   let tree = '\n';
-  const root = process.cwd();
+  const root = directory || process.cwd();
 
   function getTree(dir: string, currentDepth: number, prefix: string) {
     if (currentDepth > depth) {

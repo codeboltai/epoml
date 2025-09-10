@@ -35,6 +35,32 @@ console.log(output);
 // - item2
 ```
 
+### Template Variables
+
+EPOML supports template variables that can be passed as a second parameter to `epomlparse`:
+
+```javascript
+import { epomlparse } from 'epoml';
+
+const template = `
+<>
+  <p>My name is {name}</p>
+  <FileTree directory={treepath} depth={2} />
+</>
+`;
+
+const variables = {
+  name: "Alice",
+  treepath: "./src"
+};
+
+const output = await epomlparse(template, variables);
+console.log(output);
+// Output:
+// My name is Alice
+// [file tree of ./src directory]
+```
+
 ### Components
 
 EPOML comes with built-in components:
@@ -52,19 +78,32 @@ import { epomlparse } from 'epoml';
 const prompt = `
 <>
   <p>Project structure:</p>
-  <FileTree depth={2}/>
+  <FileTree depth={2} directory={projectPath}/>
 </>
 `;
 
-const output = await epomlparse(prompt);
+const output = await epomlparse(prompt, { projectPath: './src' });
 console.log(output);
 ```
 
 ## API
 
-### epomlparse(prompt: string): Promise<string>
+### epomlparse(prompt: string, variables?: Record<string, any>): Promise<string>
 
 Parses an EPOML string and returns the rendered output.
+
+**Parameters:**
+- `prompt` - The EPOML template string to parse
+- `variables` - Optional object containing variables to substitute in the template
+
+**Example:**
+```javascript
+// Basic usage
+const result = await epomlparse('<p>Hello World</p>');
+
+// With variables
+const result = await epomlparse('<p>Hello {name}</p>', { name: 'Alice' });
+```
 
 ## Performance
 
