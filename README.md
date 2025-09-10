@@ -77,9 +77,14 @@ The main library is published to npm as `epoml`. It provides:
 
 ### Recent Improvements ✨
 
+- **Enhanced Code Component**: Improved support for complex JavaScript code blocks using template variables to avoid JSX parsing conflicts
+- **Component Naming**: Renamed `Object` component to `DataObject` to prevent conflicts with JavaScript's built-in Object
+- **JSX Template Safety**: Implemented safer patterns for including complex code in templates
+- **Documentation Updates**: Comprehensive updates to component documentation with troubleshooting guides
+- **Template Variable Best Practices**: Enhanced examples showing proper usage of template variables with code blocks
 - **Fixed all TypeScript compilation errors**: Resolved 192+ syntax errors across components
 - **Enhanced template variable support**: Added `{variableName}` processing to all major components
-- **New component documentation**: Complete docs for ExampleInput, ExampleOutput, ExampleSet, Object, and OutputFormat
+- **New component documentation**: Complete docs for ExampleInput, ExampleOutput, ExampleSet, DataObject, and OutputFormat
 - **Shared utilities module**: Centralized text processing, escaping, and validation functions
 - **Improved inline rendering**: Better support for compact display modes
 - **Updated TypeScript target**: Upgraded to ES2018 with downlevel iteration support

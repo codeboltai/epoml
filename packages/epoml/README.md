@@ -126,6 +126,14 @@ const result = await render(component);
 
 EPOML uses SWC (Speedy Web Compiler) for JSX transformation, which provides significant performance improvements over traditional transpilers like Babel or TypeScript's built-in transpiler. SWC is used by major frameworks like Next.js and is one of the fastest JavaScript/TypeScript compilers available.
 
+## Recent Improvements ✨
+
+- **Enhanced Code Component**: Improved support for complex JavaScript code blocks using template variables to avoid JSX parsing conflicts
+- **Component Naming**: Renamed `Object` component to `DataObject` to prevent conflicts with JavaScript's built-in Object
+- **Template Variable Best Practices**: Added comprehensive documentation for using template variables with code blocks
+- **JSX Parsing Safety**: Implemented safer patterns for including complex code in templates
+- **Documentation Updates**: Enhanced component documentation with troubleshooting guides and best practices
+
 ## Custom Components
 
 You can create custom components by defining functions that return EPOML elements:

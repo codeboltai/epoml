@@ -1,6 +1,8 @@
-# Object Component
+# DataObject Component
 
-The `Object` component is used to display structured object data with proper formatting across multiple output formats. It provides comprehensive support for nested objects, arrays, and complex data structures with enhanced inline rendering and template variable processing.
+The `DataObject` component is used to display structured object data with proper formatting across multiple output formats. It provides comprehensive support for nested objects, arrays, and complex data structures with enhanced inline rendering and template variable processing.
+
+**Note:** This component was previously named `Object` but has been renamed to `DataObject` to avoid conflicts with JavaScript's built-in `Object`.
 
 ## Props
 
@@ -34,7 +36,7 @@ interface ObjectProps extends BaseComponentProps {
 ### Simple Object Display
 
 ```jsx
-<Object 
+<DataObject 
   data={{
     name: "John Doe",
     age: 30,
@@ -53,7 +55,7 @@ email: john@example.com
 ### Object with Title
 
 ```jsx
-<Object 
+<DataObject 
   title="User Profile"
   data={{
     id: 123,
@@ -78,7 +80,7 @@ active: true
 ### Inline Object Display
 
 ```jsx
-<Object 
+<DataObject 
   data={{ status: "active", count: 42 }}
   inline={true}
 />

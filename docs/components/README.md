@@ -17,7 +17,7 @@ EPOML comes with a rich set of built-in components for common use cases. Each co
 
 ### Data Presentation  
 - **[Table](./Table.md)** - Create tables with headers and data rows
-- **[Object](./Object.md)** - Display structured object data with template variables ✨
+- **[DataObject](./DataObject.md)** - Display structured object data with template variables ✨
 - **[Image](./Image.md)** - Display images with captions and positioning
 
 ### Example Components
@@ -199,7 +199,7 @@ All components support multiple output formats:
 | Hint | Contextual help | Tips, warnings, dismissible | ✓ | All |
 | Introducer | Context setting | Speaker, tone, context | ✓ | All |
 | StepwiseInstructions | Procedural guides | Numbered steps, code examples | ✓ | All |
-| Object | Data structures | Expandable, type display, inline | ✓ Enhanced | All |
+| DataObject | Data structures | Expandable, type display, inline | ✓ Enhanced | All |
 | OutputFormat | Format specs | Type, schema, examples | ✓ Enhanced | All |
 | ExampleInput | Input examples | Code samples, descriptions | ✓ Enhanced | All |
 | ExampleOutput | Output examples | Expected results | ✓ Enhanced | All |

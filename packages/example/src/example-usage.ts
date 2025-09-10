@@ -1,5 +1,15 @@
 import { epomlparse } from 'epoml';
 
+/**
+ * This example demonstrates the proper way to use the Code component
+ * with complex JavaScript code blocks using template variables.
+ * 
+ * Key lessons:
+ * 1. Use template variables ({variableName}) for complex code to avoid JSX parsing conflicts
+ * 2. Wrap multiple JSX elements in a container (div) to prevent parsing issues
+ * 3. The Bold and Code components work together seamlessly
+ */
+
 async function exampleUsage() {
    // Test with your requested function using variables
   console.log('Testing with your function using variables:');
