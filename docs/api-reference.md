@@ -298,6 +298,168 @@ interface BoldProps extends BaseComponentProps {
 }
 ```
 
+### `DocumentProps`
+
+Props for the Document component.
+
+```typescript
+interface DocumentProps extends BaseComponentProps {
+  title?: string;
+  author?: string;
+  version?: string;
+  date?: string;
+  metadata?: Record<string, any>;
+}
+```
+
+### `TableProps`
+
+Props for the Table component.
+
+```typescript
+interface TableProps extends BaseComponentProps {
+  headers?: string[];
+  rows?: string[][];
+  caption?: string;
+  bordered?: boolean;
+  striped?: boolean;
+  align?: ('left' | 'center' | 'right')[];
+}
+```
+
+### `TaskProps`
+
+Props for the Task component.
+
+```typescript
+interface TaskProps extends BaseComponentProps {
+  id?: string;
+  title?: string;
+  description?: string;
+  status?: 'pending' | 'in-progress' | 'completed' | 'cancelled';
+  priority?: 'low' | 'medium' | 'high' | 'critical';
+  assignee?: string;
+  dueDate?: string;
+  blocked?: boolean;
+}
+```
+
+### `QuestionProps`
+
+Props for the Question component.
+
+```typescript
+interface QuestionProps extends BaseComponentProps {
+  text: string;
+  type?: 'multiple-choice' | 'single-choice' | 'open-ended' | 'true-false' | 'rating';
+  options?: string[];
+  answer?: string | string[];
+  explanation?: string;
+  difficulty?: 'easy' | 'medium' | 'hard';
+  category?: string;
+}
+```
+
+### `ImageProps`
+
+Props for the Image component.
+
+```typescript
+interface ImageProps extends BaseComponentProps {
+  src?: string;
+  base64?: string;
+  alt?: string;
+  type?: string;
+  position?: 'top' | 'bottom' | 'here';
+  width?: string | number;
+  height?: string | number;
+  caption?: string;
+}
+```
+
+### `RoleProps`
+
+Props for the Role component.
+
+```typescript
+interface RoleProps extends BaseComponentProps {
+  name: string;
+  description?: string;
+  responsibilities?: string[];
+  permissions?: string[];
+  active?: boolean;
+}
+```
+
+### `HintProps`
+
+Props for the Hint component.
+
+```typescript
+interface HintProps extends BaseComponentProps {
+  type?: 'info' | 'tip' | 'warning' | 'note';
+  title?: string;
+  dismissible?: boolean;
+  icon?: string;
+}
+```
+
+### `StepwiseInstructionsProps`
+
+Props for the StepwiseInstructions component.
+
+```typescript
+interface StepwiseInstructionsProps extends BaseComponentProps {
+  title?: string;
+  steps: Array<{
+    title: string;
+    description: string;
+    code?: string;
+    language?: string;
+  }>;
+  numbered?: boolean;
+}
+```
+
+### `ObjectProps`
+
+Props for the Object component.
+
+```typescript
+interface ObjectProps extends BaseComponentProps {
+  data: any;
+  expandLevel?: number;
+  showTypes?: boolean;
+  compact?: boolean;
+}
+```
+
+### `ExampleInputProps`
+
+Props for the ExampleInput component.
+
+```typescript
+interface ExampleInputProps extends BaseComponentProps {
+  title?: string;
+  content: string;
+  language?: string;
+  description?: string;
+}
+```
+
+### `ExampleOutputProps`
+
+Props for the ExampleOutput component.
+
+```typescript
+interface ExampleOutputProps extends BaseComponentProps {
+  title?: string;
+  content: string;
+  language?: string;
+  description?: string;
+}
+```
+
 ### `CodeProps`
 
 Props for the Code component.

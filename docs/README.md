@@ -33,13 +33,16 @@ console.log(result); // "Hello, World!"
 ## Features
 
 - 🎯 **JSX-based templates** - Familiar syntax for developers
-- 📦 **Built-in components** - Rich set of pre-built components for common use cases
+- 📦 **Rich component library** - 20+ built-in components for common use cases
 - 🔧 **Custom components** - Easy to create and register your own components
 - 🔄 **Template variables** - Dynamic content with variable interpolation
 - 📄 **Multiple output formats** - Markdown, HTML, JSON, YAML, XML, and plain text
 - 🎨 **Flexible styling** - Support for CSS classes and custom formatting
 - 🚀 **TypeScript support** - Full TypeScript definitions and type safety
 - 📱 **Lightweight** - Minimal dependencies and fast rendering
+- 📋 **Task management** - Built-in components for project and task tracking
+- 🖼️ **Media support** - Audio and image components with multiple formats
+- 📊 **Data visualization** - Tables, charts, and structured data components
 
 ## Community
 

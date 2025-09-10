@@ -2,28 +2,26 @@ import { createElement } from '../core/createElement';
 import { Component, BaseComponentProps } from '../types';
 
 export interface ObjectProps extends BaseComponentProps {
-      /** Object data */
-      data?: any;
-      /** Object type */
-      type?: string;
-      /** Object name */
-      name?: string;
-      /** Whether to render as inline */
-      inline?: boolean;
-    
+  /** Object data to display */
+  data?: any;
+  /** Type of the object */
+  type?: string;
+  /** Name of the object */
+  name?: string;
+  /** Whether to display inline */
+  inline?: boolean;
 }
 
 export function Object(props: ObjectProps): Component {
-      const {
-        data,
-        type,
-        name,
-        inline = false,
-        syntax = 'json',
-        className,
-        speaker,
-        children = []
-    
+  const {
+    data,
+    type,
+    name,
+    inline = false,
+    syntax = 'json',
+    className,
+    speaker,
+    children = []
   } = props;
 
   // If children are provided, use them instead of data
@@ -65,24 +63,18 @@ function generateMarkdownObject(
   let result = '';
   
   if (name) {
-    result += `**${name}**\
-\
-`;
+    result += `**${name}**\n\n`;
   }
   
   if (type) {
-    result += `*Type: ${type}*\
-\
-`;
+    result += `*Type: ${type}*\n\n`;
   }
   
   if (data !== undefined) {
     if (inline) {
-      result += `\\`${JSON.stringify(data)}\\``;
+      result += '`' + JSON.stringify(data) + '`';
     } else {
-      result += `\\`\\`\\`json\
-${JSON.stringify(data, null, 2)}\
-\\`\\`\\``;
+      result += '```json\n' + JSON.stringify(data, null, 2) + '\n```';
     }
   }
   
@@ -100,13 +92,11 @@ function generateHtmlObject(
   let html = '';
   
   if (name) {
-    html += `<h3>${name}</h3>\
-`;
+    html += `<h3>${name}</h3>\n`;
   }
   
   if (type) {
-    html += `<p><em>Type: ${type}</em></p>\
-`;
+    html += `<p><em>Type: ${type}</em></p>\n`;
   }
   
   if (data !== undefined) {
@@ -154,13 +144,11 @@ function generateYamlObject(
   let yaml = '';
   
   if (name) {
-    yaml += `name: ${JSON.stringify(name)}\
-`;
+    yaml += `name: ${JSON.stringify(name)}\n`;
   }
   
   if (type) {
-    yaml += `type: ${JSON.stringify(type)}\
-`;
+    yaml += `type: ${JSON.stringify(type)}\n`;
   }
   
   if (data !== undefined) {
@@ -180,30 +168,28 @@ function generateXmlObject(
   let xml = '<object';
   
   if (name) {
-    xml += ` name=\"${name}\"`;
+    xml += ` name="${name}"`;
   }
   
   if (type) {
-    xml += ` type=\"${type}\"`;
+    xml += ` type="${type}"`;
   }
   
   if (className) {
-    xml += ` class=\"${className}\"`;
+    xml += ` class="${className}"`;
   }
   
   if (speaker) {
-    xml += ` data-speaker=\"${speaker}\"`;
+    xml += ` data-speaker="${speaker}"`;
   }
   
   xml += '>';
   
   if (data !== undefined) {
-    xml += `\
-  <data>${escapeXml(JSON.stringify(data))}</data>`;
+    xml += `\n  <data>${escapeXml(JSON.stringify(data))}</data>`;
   }
   
-  xml += '\
-</object>';
+  xml += '\n</object>';
   
   return createElement('pre', { className, 'data-speaker': speaker }, xml);
 }
@@ -218,17 +204,21 @@ function generateTextObject(
   let result = '';
   
   if (name) {
-    result += `Object: ${name}\
-`;
+    result += `OBJECT: ${name}\n`;
+    result += '='.repeat(Math.max(7, name.length + 7)) + '\n\n';
+  } else {
+    result += 'OBJECT\n';
+    result += '======\n\n';
   }
   
   if (type) {
-    result += `Type: ${type}\
-`;
+    result += `Type: ${type}\n\n`;
   }
   
   if (data !== undefined) {
-    result += `Data: ${JSON.stringify(data, null, 2)}`;
+    result += 'Data:\n';
+    result += '----\n';
+    result += JSON.stringify(data, null, 2);
   }
   
   return createElement('div', { className, 'data-speaker': speaker }, result);
@@ -239,7 +229,7 @@ function escapeHtml(text: string): string {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/\"/g, '&quot;')
+    .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 }
 
@@ -248,6 +238,6 @@ function escapeXml(text: string): string {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/\"/g, '&quot;')
+    .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 }

@@ -10,7 +10,7 @@ export interface DocumentProps extends BaseComponentProps {
   version?: string;
   /** Document date */
   date?: string;
-  /** Document metadata */
+  /** Additional metadata */
   metadata?: Record<string, any>;
 }
 
@@ -63,43 +63,34 @@ function generateMarkdownDocument(
   let result = '';
   
   if (title) {
-    result += `# ${title}
-`;
+    result += `# ${title}\n`;
   }
   
   if (author || version || date) {
-    result += '<!-- Document Info -->
-';
+    result += '<!-- Document Info -->\n';
     
     if (author) {
-      result += `**Author:** ${author}  
-`;
+      result += `**Author:** ${author}  \n`;
     }
     
     if (version) {
-      result += `**Version:** ${version}  
-`;
+      result += `**Version:** ${version}  \n`;
     }
     
     if (date) {
-      result += `**Date:** ${date}  
-`;
+      result += `**Date:** ${date}  \n`;
     }
     
-    result += `
-`;
+    result += '\n';
   }
   
   // Add metadata as comments
   if (Object.keys(metadata).length > 0) {
-    result += '<!-- Metadata -->
-';
+    result += '<!-- Metadata -->\n';
     for (const [key, value] of Object.entries(metadata)) {
-      result += `<!-- ${key}: ${value} -->
-`;
+      result += `<!-- ${key}: ${value} -->\n`;
     }
-    result += `
-`;
+    result += '\n';
   }
   
   // Add children content
@@ -119,63 +110,46 @@ function generateHtmlDocument(
   className?: string,
   speaker?: string
 ): Component {
-  let html = '<!DOCTYPE html>
-<html>
-<head>
-';
+  let html = '<!DOCTYPE html>\n<html>\n<head>\n';
   
   if (title) {
-    html += `  <title>${title}</title>
-`;
+    html += `  <title>${title}</title>\n`;
   }
   
   // Add metadata as meta tags
   for (const [key, value] of Object.entries(metadata)) {
-    html += `  <meta name="${key}" content="${value}">
-`;
+    html += `  <meta name="${key}" content="${value}">\n`;
   }
   
-  html += '</head>
-<body>
-';
+  html += '</head>\n<body>\n';
   
   if (title) {
-    html += `  <h1>${title}</h1>
-`;
+    html += `  <h1>${title}</h1>\n`;
   }
   
   if (author || version || date) {
-    html += '  <div class="document-info">
-';
+    html += '  <div class="document-info">\n';
     
     if (author) {
-      html += `    <p><strong>Author:</strong> ${author}</p>
-`;
+      html += `    <p><strong>Author:</strong> ${author}</p>\n`;
     }
     
     if (version) {
-      html += `    <p><strong>Version:</strong> ${version}</p>
-`;
+      html += `    <p><strong>Version:</strong> ${version}</p>\n`;
     }
     
     if (date) {
-      html += `    <p><strong>Date:</strong> ${date}</p>
-`;
+      html += `    <p><strong>Date:</strong> ${date}</p>\n`;
     }
     
-    html += '  </div>
-';
+    html += '  </div>\n';
   }
   
   // Add children content
   const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-  html += `  <div class="document-content">
-${childrenContent}
-  </div>
-`;
+  html += `  <div class="document-content">\n${childrenContent}\n  </div>\n`;
   
-  html += '</body>
-</html>';
+  html += '</body>\n</html>';
   
   return createElement('div', { className, 'data-speaker': speaker }, html);
 }
@@ -213,9 +187,17 @@ function generateJsonDocument(
   }
   
   // Add children content as a string
-  const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-  if (childrenContent) {
+  if (children.length > 0) {
+    const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
     doc.content = childrenContent;
+  }
+  
+  if (className) {
+    doc.className = className;
+  }
+  
+  if (speaker) {
+    doc.speaker = speaker;
   }
   
   return createElement('pre', { className, 'data-speaker': speaker }, JSON.stringify(doc, null, 2));
@@ -234,41 +216,40 @@ function generateYamlDocument(
   let yaml = '';
   
   if (title) {
-    yaml += `title: ${JSON.stringify(title)}
-`;
+    yaml += `title: ${JSON.stringify(title)}\n`;
   }
   
   if (author) {
-    yaml += `author: ${JSON.stringify(author)}
-`;
+    yaml += `author: ${JSON.stringify(author)}\n`;
   }
   
   if (version) {
-    yaml += `version: ${JSON.stringify(version)}
-`;
+    yaml += `version: ${JSON.stringify(version)}\n`;
   }
   
   if (date) {
-    yaml += `date: ${JSON.stringify(date)}
-`;
+    yaml += `date: ${JSON.stringify(date)}\n`;
   }
   
   if (Object.keys(metadata).length > 0) {
-    yaml += `metadata:
-`;
+    yaml += 'metadata:\n';
     for (const [key, value] of Object.entries(metadata)) {
-      yaml += `  ${key}: ${JSON.stringify(value)}
-`;
+      yaml += `  ${key}: ${JSON.stringify(value)}\n`;
     }
   }
   
   // Add children content as a string
-  const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-  if (childrenContent) {
-    yaml += `content: |
-${childrenContent.split('
-').map(line => `  ${line}`).join('
-')}`;
+  if (children.length > 0) {
+    const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
+    yaml += `content: |\n${childrenContent.split('\n').map(line => `  ${line}`).join('\n')}`;
+  }
+  
+  if (className) {
+    yaml += `\nclassName: ${JSON.stringify(className)}`;
+  }
+  
+  if (speaker) {
+    yaml += `\nspeaker: ${JSON.stringify(speaker)}`;
   }
   
   return createElement('pre', { className, 'data-speaker': speaker }, yaml);
@@ -294,45 +275,36 @@ function generateXmlDocument(
     xml += ` data-speaker="${speaker}"`;
   }
   
-  xml += '>
-';
+  xml += '>\n';
   
   if (title) {
-    xml += `  <title>${title}</title>
-`;
+    xml += `  <title>${escapeXml(title)}</title>\n`;
   }
   
   if (author) {
-    xml += `  <author>${author}</author>
-`;
+    xml += `  <author>${escapeXml(author)}</author>\n`;
   }
   
   if (version) {
-    xml += `  <version>${version}</version>
-`;
+    xml += `  <version>${escapeXml(version)}</version>\n`;
   }
   
   if (date) {
-    xml += `  <date>${date}</date>
-`;
+    xml += `  <date>${escapeXml(date)}</date>\n`;
   }
   
   if (Object.keys(metadata).length > 0) {
-    xml += '  <metadata>
-';
+    xml += '  <metadata>\n';
     for (const [key, value] of Object.entries(metadata)) {
-      xml += `    <${key}>${value}</${key}>
-`;
+      xml += `    <${key}>${escapeXml(String(value))}</${key}>\n`;
     }
-    xml += '  </metadata>
-';
+    xml += '  </metadata>\n';
   }
   
   // Add children content
-  const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-  if (childrenContent) {
-    xml += `  <content>${childrenContent}</content>
-`;
+  if (children.length > 0) {
+    const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
+    xml += `  <content>${escapeXml(childrenContent)}</content>\n`;
   }
   
   xml += '</document>';
@@ -353,54 +325,58 @@ function generateTextDocument(
   let result = '';
   
   if (title) {
-    result += `DOCUMENT: ${title}
-`;
-    result += '='.repeat(Math.max(10, title.length + 9)) + `
-`;
+    result += `DOCUMENT: ${title}\n`;
+    result += '='.repeat(Math.max(9, title.length + 9)) + '\n\n';
+  } else {
+    result += 'DOCUMENT\n';
+    result += '========\n\n';
   }
   
   if (author || version || date) {
-    result += 'DOCUMENT INFO:
-';
-    result += '-------------
-';
+    result += 'Document Information:\n';
+    result += '-------------------\n\n';
     
     if (author) {
-      result += `Author: ${author}
-`;
+      result += `Author: ${author}\n`;
     }
     
     if (version) {
-      result += `Version: ${version}
-`;
+      result += `Version: ${version}\n`;
     }
     
     if (date) {
-      result += `Date: ${date}
-`;
+      result += `Date: ${date}\n`;
     }
     
-    result += `
-`;
+    result += '\n';
   }
   
   // Add metadata
   if (Object.keys(metadata).length > 0) {
-    result += 'METADATA:
-';
-    result += '--------
-';
+    result += 'Metadata:\n';
+    result += '--------\n\n';
     for (const [key, value] of Object.entries(metadata)) {
-      result += `${key}: ${value}
-`;
+      result += `${key}: ${value}\n`;
     }
-    result += `
-`;
+    result += '\n';
   }
   
   // Add children content
-  const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-  result += childrenContent;
+  if (children.length > 0) {
+    result += 'Content:\n';
+    result += '-------\n\n';
+    const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
+    result += childrenContent;
+  }
   
   return createElement('div', { className, 'data-speaker': speaker }, result);
+}
+
+function escapeXml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }

@@ -2,31 +2,29 @@ import { createElement } from '../core/createElement';
 import { Component, BaseComponentProps } from '../types';
 
 export interface OutputFormatProps extends BaseComponentProps {
-      /** Format type */
-      type: 'json' | 'xml' | 'csv' | 'yaml' | 'text' | 'markdown' | 'html';
-      /** Format description */
-      description?: string;
-      /** Format example */
-      example?: string;
-      /** Format schema */
-      schema?: any;
-      /** Whether this format is the preferred output format */
-      preferred?: boolean;
-    
+  /** Output format type */
+  type: 'json' | 'xml' | 'csv' | 'yaml' | 'text' | 'markdown' | 'html';
+  /** Description of the format */
+  description?: string;
+  /** Example of the format */
+  example?: string;
+  /** Schema definition for the format */
+  schema?: any;
+  /** Whether this is the preferred format */
+  preferred?: boolean;
 }
 
 export function OutputFormat(props: OutputFormatProps): Component {
-      const {
-        type,
-        description,
-        example,
-        schema,
-        preferred = false,
-        syntax = 'text',
-        className,
-        speaker,
-        children = []
-    
+  const {
+    type,
+    description,
+    example,
+    schema,
+    preferred = false,
+    syntax = 'text',
+    className,
+    speaker,
+    children = []
   } = props;
 
   // Generate the component based on syntax
@@ -65,36 +63,20 @@ function generateMarkdownOutputFormat(
   let result = '';
   
   const preferredMarker = preferred ? ' 🌟 (Preferred)' : '';
-  result += `## Output Format: ${type}${preferredMarker}\
-\
-`;
+  result += `## Output Format: ${type}${preferredMarker}\n\n`;
   
   if (description) {
-    result += `**Description:** ${description}\
-\
-`;
+    result += `**Description:** ${description}\n\n`;
   }
   
   if (example) {
-    result += '### Example\
-\
-';
-    result += `\\`\\`\\`${type}\
-${example}\
-\\`\\`\\`\
-\
-`;
+    result += '### Example\n\n';
+    result += '```' + type + '\n' + example + '\n```\n\n';
   }
   
   if (schema) {
-    result += '### Schema\
-\
-';
-    result += `\\`\\`\\`json\
-${JSON.stringify(schema, null, 2)}\
-\\`\\`\\`\
-\
-`;
+    result += '### Schema\n\n';
+    result += '```json\n' + JSON.stringify(schema, null, 2) + '\n```\n\n';
   }
   
   // Add children content
@@ -118,39 +100,29 @@ function generateHtmlOutputFormat(
 ): Component {
   const preferredMarker = preferred ? ' 🌟 (Preferred)' : '';
   
-  let html = `<div class=\"output-format${className ? ` ${className}` : ''}\"${speaker ? ` data-speaker=\"${speaker}\"` : ''}>\
-`;
-  html += `  <h2>Output Format: ${escapeHtml(type)}${preferredMarker}</h2>\
-`;
+  let html = `<div class="output-format${className ? ` ${className}` : ''}"${speaker ? ` data-speaker="${speaker}"` : ''}>\n`;
+  html += `  <h2>Output Format: ${escapeHtml(type)}${preferredMarker}</h2>\n`;
   
   if (description) {
-    html += `  <p class=\"format-description\"><strong>Description:</strong> ${escapeHtml(description)}</p>\
-`;
+    html += `  <p class="format-description"><strong>Description:</strong> ${escapeHtml(description)}</p>\n`;
   }
   
   if (example) {
-    html += '  <h3>Example</h3>\
-';
-    html += `  <pre class=\"format-example\"><code class=\"language-${type}\">${escapeHtml(example)}</code></pre>\
-`;
+    html += '  <h3>Example</h3>\n';
+    html += `  <pre class="format-example"><code class="language-${type}">${escapeHtml(example)}</code></pre>\n`;
   }
   
   if (schema) {
-    html += '  <h3>Schema</h3>\
-';
-    html += `  <pre class=\"format-schema\"><code class=\"language-json\">${escapeHtml(JSON.stringify(schema, null, 2))}</code></pre>\
-`;
+    html += '  <h3>Schema</h3>\n';
+    html += `  <pre class="format-schema"><code class="language-json">${escapeHtml(JSON.stringify(schema, null, 2))}</code></pre>\n`;
   }
   
   // Add children content
   if (children.length > 0) {
-    html += '  <div class=\"format-details\">\
-';
+    html += '  <div class="format-details">\n';
     const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-    html += `    ${childrenContent}\
-`;
-    html += '  </div>\
-';
+    html += `    ${childrenContent}\n`;
+    html += '  </div>\n';
   }
   
   html += '</div>';
@@ -213,45 +185,32 @@ function generateYamlOutputFormat(
   speaker?: string
 ): Component {
   const preferredMarker = preferred ? ' 🌟 (Preferred)' : '';
-  let yaml = `type: ${type}\
-preferred: ${preferred}\
-`;
+  let yaml = `type: ${type}\npreferred: ${preferred}\n`;
   
   if (description) {
-    yaml += `description: ${JSON.stringify(description)}\
-`;
+    yaml += `description: ${JSON.stringify(description)}\n`;
   }
   
   if (example) {
-    yaml += `example: |\
-${example.split('\
-').map(line => `  ${line}`).join('\
-')}`;
+    yaml += `example: |\n${example.split('\n').map(line => `  ${line}`).join('\n')}`;
   }
   
   if (schema) {
-    yaml += `\
-schema: ${JSON.stringify(schema)}`;
+    yaml += `\nschema: ${JSON.stringify(schema)}`;
   }
   
   // Add children content as a string
   if (children.length > 0) {
     const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-    yaml += `\
-details: |\
-${childrenContent.split('\
-').map(line => `  ${line}`).join('\
-')}`;
+    yaml += `\ndetails: |\n${childrenContent.split('\n').map(line => `  ${line}`).join('\n')}`;
   }
   
   if (className) {
-    yaml += `\
-className: ${JSON.stringify(className)}`;
+    yaml += `\nclassName: ${JSON.stringify(className)}`;
   }
   
   if (speaker) {
-    yaml += `\
-speaker: ${JSON.stringify(speaker)}`;
+    yaml += `\nspeaker: ${JSON.stringify(speaker)}`;
   }
   
   return createElement('pre', { className, 'data-speaker': speaker }, yaml);
@@ -267,39 +226,34 @@ function generateXmlOutputFormat(
   className?: string,
   speaker?: string
 ): Component {
-  let xml = `<outputFormat type=\"${type}\" preferred=\"${preferred}\"`;
+  let xml = `<outputFormat type="${type}" preferred="${preferred}"`;
   
   if (className) {
-    xml += ` class=\"${className}\"`;
+    xml += ` class="${className}"`;
   }
   
   if (speaker) {
-    xml += ` data-speaker=\"${speaker}\"`;
+    xml += ` data-speaker="${speaker}"`;
   }
   
-  xml += '>\
-';
+  xml += '>\n';
   
   if (description) {
-    xml += `  <description>${escapeXml(description)}</description>\
-`;
+    xml += `  <description>${escapeXml(description)}</description>\n`;
   }
   
   if (example) {
-    xml += `  <example>${escapeXml(example)}</example>\
-`;
+    xml += `  <example><![CDATA[${example}]]></example>\n`;
   }
   
   if (schema) {
-    xml += `  <schema>${escapeXml(JSON.stringify(schema))}</schema>\
-`;
+    xml += `  <schema>${escapeXml(JSON.stringify(schema))}</schema>\n`;
   }
   
   // Add children content
   if (children.length > 0) {
     const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-    xml += `  <details>${escapeXml(childrenContent)}</details>\
-`;
+    xml += `  <details>${escapeXml(childrenContent)}</details>\n`;
   }
   
   xml += '</outputFormat>';
@@ -318,44 +272,30 @@ function generateTextOutputFormat(
   speaker?: string
 ): Component {
   const preferredMarker = preferred ? ' 🌟 (Preferred)' : '';
-  let result = `OUTPUT FORMAT: ${type}${preferredMarker}\
-`;
-  result += '='.repeat(Math.max(14, type.length + 15)) + '\
-\
-';
+  
+  let result = `OUTPUT FORMAT: ${type.toUpperCase()}${preferredMarker}\n`;
+  result += '='.repeat(Math.max(14, type.length + 14)) + '\n\n';
   
   if (description) {
-    result += `Description: ${description}\
-\
-`;
+    result += `Description: ${description}\n\n`;
   }
   
   if (example) {
-    result += 'Example:\
-';
-    result += '-------\
-';
-    result += `${example}\
-\
-`;
+    result += 'Example:\n';
+    result += '-------\n';
+    result += `${example}\n\n`;
   }
   
   if (schema) {
-    result += 'Schema:\
-';
-    result += '------\
-';
-    result += `${JSON.stringify(schema, null, 2)}\
-\
-`;
+    result += 'Schema:\n';
+    result += '------\n';
+    result += `${JSON.stringify(schema, null, 2)}\n\n`;
   }
   
   // Add children content
   if (children.length > 0) {
-    result += 'Details:\
-';
-    result += '-------\
-';
+    result += 'Details:\n';
+    result += '-------\n';
     const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
     result += childrenContent;
   }
@@ -368,7 +308,7 @@ function escapeHtml(text: string): string {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/\"/g, '&quot;')
+    .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 }
 
@@ -377,6 +317,6 @@ function escapeXml(text: string): string {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/\"/g, '&quot;')
+    .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 }

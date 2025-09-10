@@ -11,6 +11,20 @@ EPOML comes with a rich set of built-in components for common use cases. Each co
 - **[FileTree](./FileTree.md)** - Display directory structures as trees
 - **[CaptionedParagraph](./CaptionedParagraph.md)** - Paragraphs with customizable captions
 - **[Inline](./Inline.md)** - Inline formatting and content
+- **[Document](./Document.md)** - Full document structures with metadata
+- **[Table](./Table.md)** - Create tables with headers and data rows
+- **[Image](./Image.md)** - Display images with captions and positioning
+- **[Task](./Task.md)** - Task management and tracking components
+- **[Question](./Question.md)** - Create questions with multiple formats
+- **[Role](./Role.md)** - Define roles with permissions and responsibilities
+- **[Hint](./Hint.md)** - Provide hints and tips in content
+- **[Introducer](./Introducer.md)** - Introduction and context setting
+- **[StepwiseInstructions](./StepwiseInstructions.md)** - Step-by-step instruction guides
+- **[Object](./Object.md)** - Display structured object data
+- **[OutputFormat](./OutputFormat.md)** - Control output formatting
+- **[ExampleInput](./ExampleInput.md)** - Show example inputs
+- **[ExampleOutput](./ExampleOutput.md)** - Show example outputs
+- **[ExampleSet](./ExampleSet.md)** - Group related examples
 
 ## Common Props
 
@@ -141,6 +155,19 @@ All components support multiple output formats:
 | FileTree | Directory structure | Tree visualization | Text-based |
 | CaptionedParagraph | Labeled content | Flexible caption styles | All |
 | Inline | Inline formatting | Minimal wrapping | All |
+| Document | Full documents | Metadata, structure | All |
+| Table | Structured data | Headers, rows, styling | All |
+| Image | Visual content | Captions, sizing, positioning | All |
+| Task | Project management | Status, priority, assignment | All |
+| Question | Interactive content | Multiple question types | All |
+| Role | Team organization | Permissions, responsibilities | All |
+| Hint | Contextual help | Tips, warnings, dismissible | All |
+| Introducer | Context setting | Speaker, tone, context | All |
+| StepwiseInstructions | Procedural guides | Numbered steps, code examples | All |
+| Object | Data structures | Expandable, type display | All |
+| ExampleInput | Input examples | Code samples, descriptions | All |
+| ExampleOutput | Output examples | Expected results | All |
+| ExampleSet | Example groups | Related examples | All |
 
 ## Next Steps
 

@@ -170,42 +170,31 @@ function generateHtmlTask(
 `;
   }
   
-  html += '  <ul>
-';
-  html += `    <li><strong>Status:</strong> ${status}</li>
-`;
-  html += `    <li><strong>Priority:</strong> ${priority}</li>
-`;
+  html += '  <ul>\n';
+  html += `    <li><strong>Status:</strong> ${status}</li>\n`;
+  html += `    <li><strong>Priority:</strong> ${priority}</li>\n`;
   
   if (assignee) {
-    html += `    <li><strong>Assignee:</strong> ${escapeHtml(assignee)}</li>
-`;
+    html += `    <li><strong>Assignee:</strong> ${escapeHtml(assignee)}</li>\n`;
   }
   
   if (dueDate) {
-    html += `    <li><strong>Due Date:</strong> ${escapeHtml(dueDate)}</li>
-`;
+    html += `    <li><strong>Due Date:</strong> ${escapeHtml(dueDate)}</li>\n`;
   }
   
   if (blocked) {
-    html += `    <li><strong>Blocked:</strong> Yes</li>
-`;
+    html += `    <li><strong>Blocked:</strong> Yes</li>\n`;
   }
   
-  html += '  </ul>
-';
+  html += '  </ul>\n';
   
   // Add children content
   if (children.length > 0) {
-    html += '  <div class="task-details">
-';
-    html += '    <h3>Details</h3>
-';
+    html += '  <div class="task-details">\n';
+    html += '    <h3>Details</h3>\n';
     const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-    html += `    ${childrenContent}
-`;
-    html += '  </div>
-';
+    html += `    ${childrenContent}\n`;
+    html += '  </div>\n';
   }
   
   html += '</div>';
@@ -318,20 +307,15 @@ priority: ${priority}
   // Add children content as a string
   if (children.length > 0) {
     const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-    yaml += `details: |
-${childrenContent.split('
-').map(line => `  ${line}`).join('
-')}`;
+    yaml += `details: |\n${childrenContent.split('\n').map(line => `  ${line}`).join('\n')}`;
   }
   
   if (className) {
-    yaml += `
-className: ${JSON.stringify(className)}`;
+    yaml += `\nclassName: ${JSON.stringify(className)}`;
   }
   
   if (speaker) {
-    yaml += `
-speaker: ${JSON.stringify(speaker)}`;
+    yaml += `\nspeaker: ${JSON.stringify(speaker)}`;
   }
   
   return createElement('pre', { className, 'data-speaker': speaker }, yaml);
@@ -364,37 +348,30 @@ function generateXmlTask(
     xml += ` data-speaker="${speaker}"`;
   }
   
-  xml += '>
-';
+  xml += '>\n';
   
   if (title) {
-    xml += `  <title>${escapeXml(title)}</title>
-`;
+    xml += `  <title>${escapeXml(title)}</title>\n`;
   }
   
   if (description) {
-    xml += `  <description>${escapeXml(description)}</description>
-`;
+    xml += `  <description>${escapeXml(description)}</description>\n`;
   }
   
   if (assignee) {
-    xml += `  <assignee>${escapeXml(assignee)}</assignee>
-`;
+    xml += `  <assignee>${escapeXml(assignee)}</assignee>\n`;
   }
   
   if (dueDate) {
-    xml += `  <dueDate>${escapeXml(dueDate)}</dueDate>
-`;
+    xml += `  <dueDate>${escapeXml(dueDate)}</dueDate>\n`;
   }
   
-  xml += `  <blocked>${blocked}</blocked>
-`;
+  xml += `  <blocked>${blocked}</blocked>\n`;
   
   // Add children content
   if (children.length > 0) {
     const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-    xml += `  <details>${escapeXml(childrenContent)}</details>
-`;
+    xml += `  <details>${escapeXml(childrenContent)}</details>\n`;
   }
   
   xml += '</task>';
@@ -431,45 +408,32 @@ function generateTextTask(
     'critical': '🔴'
   }[priority];
   
-  let result = `TASK: ${statusEmoji} ${priorityEmoji} ${title || 'Untitled Task'}${id ? ` (${id})` : ''}
-`;
-  result += '-'.repeat(Math.max(5, (title?.length || 12) + 10)) + `
-
-`;
+  let result = `TASK: ${statusEmoji} ${priorityEmoji} ${title || 'Untitled Task'}${id ? ` (${id})` : ''}\n`;
+  result += '-'.repeat(Math.max(5, (title?.length || 12) + 10)) + '\n\n';
   
   if (description) {
-    result += `Description: ${description}
-
-`;
+    result += `Description: ${description}\n\n`;
   }
   
-  result += `Status: ${status}
-`;
-  result += `Priority: ${priority}
-`;
+  result += `Status: ${status}\n`;
+  result += `Priority: ${priority}\n`;
   
   if (assignee) {
-    result += `Assignee: ${assignee}
-`;
+    result += `Assignee: ${assignee}\n`;
   }
   
   if (dueDate) {
-    result += `Due Date: ${dueDate}
-`;
+    result += `Due Date: ${dueDate}\n`;
   }
   
   if (blocked) {
-    result += `Blocked: Yes
-`;
+    result += `Blocked: Yes\n`;
   }
   
   // Add children content
   if (children.length > 0) {
-    result += `
-Details:
-`;
-    result += '-------
-';
+    result += `\nDetails:\n`;
+    result += '-------\n';
     const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
     result += childrenContent;
   }
