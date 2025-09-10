@@ -1,5 +1,5 @@
 
-import epoml, { Epoml } from './epoml';
+import { render, Epoml, registerComponent, unregisterComponent, getComponent, clearComponents, type Component } from './epoml';
 import { 
   Audio, 
   Bold, 
@@ -16,12 +16,13 @@ import {
   type InlineProps
 } from './components';
 import { epomlparse } from './epomlparse';
-import { registerComponent, unregisterComponent, getComponent, clearComponents } from './epoml';
 import { type TemplateVariables } from './types';
 
-// Export the epoml function, components, epomlparse function, and component registry functions
+// Export the render function, components, epomlparse function, and component registry functions
 export { 
-  epoml, 
+  render,
+  Epoml,
+  Component,
   Audio, 
   Bold, 
   CaptionedParagraph, 

@@ -1,5 +1,5 @@
 import * as swc from '@swc/core';
-import epoml, { Epoml, registerComponent, unregisterComponent, getComponent, clearComponents } from './epoml';
+import { render, Epoml, registerComponent, unregisterComponent, getComponent, clearComponents } from './epoml';
 import { FileTree } from './components/FileTree';
 
 /**
@@ -62,6 +62,6 @@ export async function epomlparse(prompt: string, variables?: Record<string, any>
   }
 
   // Render the component tree to a string
-  const output = await epoml(component);
+  const output = await render(component);
   return output;
 }

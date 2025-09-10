@@ -1,50 +1,84 @@
-# EPOML Example
+# EPOML Examples
 
-This is an example project demonstrating how to use the EPOML library.
+This package contains comprehensive examples and tests for the EPOML library. It demonstrates various features and use cases of the EPOML template engine.
 
-## Usage
+## Available Examples
 
-```javascript
-import { epomlparse } from 'epoml';
+### 1. Custom Component Example (`src/index.ts`)
+Demonstrates how to create and register custom components with EPOML.
 
-const prompt = `
-<>
-  <p>This is basic text</p>
-  <list>
-    <item>item1</item>
-    <item>item2</item>
-  </list>
-</>
-`;
-
-const output = await epomlparse(prompt);
-console.log(output);
+**Run:**
+```bash
+npm run dev
 ```
 
-## Running the Example
+### 2. Basic Example Usage (`src/example-usage.ts`)
+Shows basic template parsing with variable substitution and FileTree component usage.
+
+**Run:**
+```bash
+npm run example:basic
+```
+
+### 3. Template Variables Demo (`src/demo-variables.ts`)
+Comprehensive demonstration of template variable features including:
+- Basic text substitution
+- FileTree with variable directory paths
+- Multiple variables in complex templates
+
+**Run:**
+```bash
+npm run example:demo
+```
+
+### 4. Template Variables Test Suite (`src/test-variables.ts`)
+Complete test suite for template variable functionality including:
+- Simple variable substitution tests
+- FileTree component tests
+- Multiple variable tests
+- Error handling tests
+- Complex template tests
+
+**Run:**
+```bash
+npm run example:test
+```
+
+## Getting Started
 
 1. Install dependencies:
-   ```bash
-   pnpm install
-   ```
+```bash
+pnpm install
+```
 
-2. Run in development mode:
-   ```bash
-   pnpm run dev
-   ```
+2. Run any example:
+```bash
+# Custom component example
+pnpm run dev
 
-3. Build for production:
-   ```bash
-   pnpm run build
-   ```
+# Basic usage example
+pnpm run example:basic
 
-4. Run the built JavaScript:
-   ```bash
-   pnpm start
-   ```
+# Template variables demo
+pnpm run example:demo
+
+# Template variables test suite
+pnpm run example:test
+```
+
+## Building
+
+```bash
+pnpm run build
+```
+
+This will compile TypeScript files to the `dist/` directory.
 
 ## Available Scripts
 
-- `pnpm run dev` - Run the TypeScript file directly using ts-node
-- `pnpm run build` - Compile TypeScript to JavaScript in the dist folder
+- `pnpm run dev` - Run the custom component example
+- `pnpm run build` - Compile TypeScript to JavaScript
 - `pnpm start` - Run the compiled JavaScript
+- `pnpm run example:basic` - Run basic usage example
+- `pnpm run example:demo` - Run template variables demo
+- `pnpm run example:test` - Run template variables test suite

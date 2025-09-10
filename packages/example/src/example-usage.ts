@@ -1,4 +1,4 @@
-import { epomlparse } from './epomlparse';
+import { epomlparse } from 'epoml';
 
 async function exampleUsage() {
   // Example from user query: <p>My name is name<p> with {name:"hi"}

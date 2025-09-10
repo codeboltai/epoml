@@ -76,7 +76,7 @@ export namespace Epoml {
 }
 
 // The renderer function
-async function render(component: Component | string): Promise<string> {
+export async function render(component: Component | string): Promise<string> {
   if (typeof component === 'string') {
     return component;
   }
@@ -106,9 +106,4 @@ async function render(component: Component | string): Promise<string> {
       }
       return '';
   }
-}
-
-// The main epoml function
-export default async function epoml(component: Component): Promise<string> {
-  return render(component);
 }

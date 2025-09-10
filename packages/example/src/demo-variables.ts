@@ -1,4 +1,4 @@
-import { epomlparse } from './epomlparse';
+import { epomlparse } from 'epoml';
 
 async function demonstrateTemplateVariables() {
   console.log('=== EPOML Template Variables Demo ===\n');

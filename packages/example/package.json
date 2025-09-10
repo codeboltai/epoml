@@ -6,8 +6,12 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node src/custom-component-test.ts",
-    "start": "node dist/custom-component-test.js"
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "example:basic": "ts-node src/example-usage.ts",
+    "example:demo": "ts-node src/demo-variables.ts",
+    "example:test": "ts-node src/test-variables.ts",
+    "example:custom": "ts-node src/custom-component-example.ts"
   },
   "keywords": [],
   "author": "",

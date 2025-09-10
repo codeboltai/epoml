@@ -6,6 +6,8 @@ function Task({ children }: { children: string }) {
 }
 
 async function main() {
+  console.log('=== EPOML Example - Custom Component ===\n');
+  
   // Register custom component
   registerComponent('Task', Task);
 
@@ -16,10 +18,13 @@ async function main() {
 
   try {
     const output = await epomlparse(prompt);
-    console.log(output);
+    console.log('Input:', prompt);
+    console.log('Output:', output);
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
-main();
+if (require.main === module) {
+  main();
+}
