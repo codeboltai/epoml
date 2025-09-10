@@ -18,7 +18,7 @@ import {
   Image,
   Inline,
   Introducer,
-  Object as DataObject,
+  DataObject,
   OutputFormat,
   Question,
   Role,

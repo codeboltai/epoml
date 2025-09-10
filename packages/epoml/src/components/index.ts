@@ -13,7 +13,7 @@ export { Hint, type HintProps } from './Hint';
 export { Image, type ImageProps } from './Image';
 export { Inline, type InlineProps } from './Inline';
 export { Introducer, type IntroducerProps } from './Introducer';
-export { DataObject as Object, type ObjectProps } from './Object';
+export { DataObject, type ObjectProps } from './Object';
 export { OutputFormat, type OutputFormatProps } from './OutputFormat';
 export { Question, type QuestionProps } from './Question';
 export { Role, type RoleProps } from './Role';
