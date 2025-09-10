@@ -15,7 +15,7 @@ export interface ObjectProps extends BaseComponentProps {
   templateVars?: Record<string, any>;
 }
 
-export function Object(props: ObjectProps): Component {
+export function DataObject(props: ObjectProps): Component {
   const {
     data,
     type,

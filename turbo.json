@@ -18,6 +18,22 @@
     "example:*": {
       "cache": false,
       "dependsOn": ["build"]
+    },
+    "example:basic": {
+      "cache": false,
+      "dependsOn": ["build"]
+    },
+    "example:demo": {
+      "cache": false,
+      "dependsOn": ["build"]
+    },
+    "example:test": {
+      "cache": false,
+      "dependsOn": ["build"]
+    },
+    "example:custom": {
+      "cache": false,
+      "dependsOn": ["build"]
     }
   }
 }
