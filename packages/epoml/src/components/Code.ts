@@ -90,7 +90,7 @@ function generateMarkdownCode(
   if (blankLine && !inline) result += '\n';
   
   if (inline) {
-    result = `\`${content}\``;
+    result = `\`\`\`${content}\`\`\``;
   } else {
     const language = lang || '';
     result += `\`\`\`${language}\n${content}\n\`\`\``;
