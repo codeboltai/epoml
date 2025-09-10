@@ -3,10 +3,10 @@ import { epomlparse, Epoml, registerComponent, type Component } from 'epoml';
 // Define a custom component using the Epoml namespace
 function Note({ title, children }: { title: string; children: (Component | string)[] }): Component {
   // Using Epoml.createElement to create the component structure
-  return Epoml.createElement('div', {}, [
+  return Epoml.createElement('div', {}, 
     Epoml.createElement('p', {}, `📝 Note: ${title}`),
-    Epoml.createElement('p', {}, children)
-  ]);
+    Epoml.createElement('p', {}, ...children)
+  );
 }
 
 // Another custom component that creates a todo item

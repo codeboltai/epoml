@@ -105,6 +105,21 @@ const result = await epomlparse('<p>Hello World</p>');
 const result = await epomlparse('<p>Hello {name}</p>', { name: 'Alice' });
 ```
 
+### render(component: Component | string): Promise<string>
+
+Renders an EPOML component tree to a string. This is the underlying function used by `epomlparse`.
+
+**Parameters:**
+- `component` - The component tree to render
+
+**Example:**
+```javascript
+import { render, Epoml } from 'epoml';
+
+const component = Epoml.createElement('p', {}, 'Hello World');
+const result = await render(component);
+```
+
 ## Performance
 
 EPOML uses SWC (Speedy Web Compiler) for JSX transformation, which provides significant performance improvements over traditional transpilers like Babel or TypeScript's built-in transpiler. SWC is used by major frameworks like Next.js and is one of the fastest JavaScript/TypeScript compilers available.
@@ -127,3 +142,53 @@ Then use it in your EPOML:
 const prompt = `
 <MyComponent name="World" />
 `;
+
+const output = await epomlparse(prompt);
+```
+
+### Advanced Custom Component Example
+
+Here's a more advanced example showing how to create custom components with the Epoml namespace:
+
+```javascript
+import { epomlparse, Epoml, registerComponent, type Component } from 'epoml';
+
+// Define a custom component using the Epoml namespace
+function Note({ title, children }: { title: string; children: (Component | string)[] }): Component {
+  return Epoml.createElement('div', {}, 
+    Epoml.createElement('p', {}, `📝 Note: ${title}`),
+    Epoml.createElement('p', {}, ...children)
+  );
+}
+
+// Another custom component that creates a todo item
+function Todo({ item, completed }: { item: string; completed?: boolean }): Component {
+  const status = completed ? '✅' : '⏳';
+  return Epoml.createElement('p', {}, `${status} ${item}`);
+}
+
+// Register the custom components
+registerComponent('Note', Note);
+registerComponent('Todo', Todo);
+
+// Use the components in EPOML
+const template = `
+<div>
+  <Note title="Tasks for today">
+    Here are the tasks you need to complete today:
+  </Note>
+  <list>
+    <Todo item="Review code" completed={true} />
+    <Todo item="Write documentation" completed={false} />
+  </list>
+</div>
+`;
+
+const output = await epomlparse(template);
+```
+
+This example demonstrates:
+1. Creating custom components using `Epoml.createElement`
+2. Defining component props and children
+3. Registering components with `registerComponent`
+4. Using the components in EPOML templates
