@@ -1,5 +1,8 @@
 
-import { render, createElement, Fragment, registerComponent, unregisterComponent, getComponent, clearComponents } from './epoml';
+import { render } from './core/renderer';
+import { createElement } from './core/createElement';
+import { Fragment } from './core/Fragment';
+import { registerComponent, unregisterComponent, getComponent, clearComponents } from './core/componentRegistry';
 import { 
   Audio, 
   Bold, 

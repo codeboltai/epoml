@@ -1,4 +1,4 @@
-import { createElement } from '../epoml';
+import { createElement } from '../core/createElement';
 import { Component } from '../types';
 
 export interface CodeProps {

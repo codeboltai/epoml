@@ -65,7 +65,7 @@ function MyComponent() {
 
 ## Backward Compatibility
 
-The `Epoml` namespace is still available for backward compatibility but is deprecated and will be removed in a future major version.
+⚠️ **Breaking Change**: The `Epoml` namespace has been completely removed. You must update your code to use the direct function exports.
 
 ## Benefits
 
