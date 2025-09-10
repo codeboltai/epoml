@@ -45,12 +45,10 @@ importers:
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
-
-  packages/types:
     devDependencies:
-      typescript:
-        specifier: ^5.9.2
-        version: 5.9.2
+      '@types/node':
+        specifier: ^24.3.1
+        version: 24.3.1
 
 packages:
 

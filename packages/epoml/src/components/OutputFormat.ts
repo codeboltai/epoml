@@ -1,5 +1,6 @@
 import { createElement } from '../core/createElement';
 import { Component, BaseComponentProps } from '../types';
+import { escapeHtml, escapeXml, repeatChar, processTemplateVars } from '../utils';
 
 export interface OutputFormatProps extends BaseComponentProps {
   /** Output format type */
@@ -12,6 +13,8 @@ export interface OutputFormatProps extends BaseComponentProps {
   schema?: any;
   /** Whether this is the preferred format */
   preferred?: boolean;
+  /** Template variables for dynamic content */
+  templateVars?: Record<string, any>;
 }
 
 export function OutputFormat(props: OutputFormatProps): Component {
@@ -21,32 +24,37 @@ export function OutputFormat(props: OutputFormatProps): Component {
     example,
     schema,
     preferred = false,
+    templateVars = {},
     syntax = 'text',
     className,
     speaker,
     children = []
   } = props;
 
+  // Process template variables in text content
+  const processedDescription = description ? processTemplateVars(description, templateVars) : description;
+  const processedExample = example ? processTemplateVars(example, templateVars) : example;
+
   // Generate the component based on syntax
   switch (syntax) {
     case 'markdown':
-      return generateMarkdownOutputFormat(type, description, example, schema, preferred, children, className, speaker);
+      return generateMarkdownOutputFormat(type, processedDescription, processedExample, schema, preferred, children, className, speaker);
     
     case 'html':
-      return generateHtmlOutputFormat(type, description, example, schema, preferred, children, className, speaker);
+      return generateHtmlOutputFormat(type, processedDescription, processedExample, schema, preferred, children, className, speaker);
     
     case 'json':
-      return generateJsonOutputFormat(type, description, example, schema, preferred, children, className, speaker);
+      return generateJsonOutputFormat(type, processedDescription, processedExample, schema, preferred, children, className, speaker);
     
     case 'yaml':
-      return generateYamlOutputFormat(type, description, example, schema, preferred, children, className, speaker);
+      return generateYamlOutputFormat(type, processedDescription, processedExample, schema, preferred, children, className, speaker);
     
     case 'xml':
-      return generateXmlOutputFormat(type, description, example, schema, preferred, children, className, speaker);
+      return generateXmlOutputFormat(type, processedDescription, processedExample, schema, preferred, children, className, speaker);
     
     case 'text':
     default:
-      return generateTextOutputFormat(type, description, example, schema, preferred, children, className, speaker);
+      return generateTextOutputFormat(type, processedDescription, processedExample, schema, preferred, children, className, speaker);
   }
 }
 
@@ -274,7 +282,7 @@ function generateTextOutputFormat(
   const preferredMarker = preferred ? ' 🌟 (Preferred)' : '';
   
   let result = `OUTPUT FORMAT: ${type.toUpperCase()}${preferredMarker}\n`;
-  result += '='.repeat(Math.max(14, type.length + 14)) + '\n\n';
+  result += repeatChar('=', Math.max(14, type.length + 14)) + '\n\n';
   
   if (description) {
     result += `Description: ${description}\n\n`;
@@ -303,20 +311,3 @@ function generateTextOutputFormat(
   return createElement('div', { className, 'data-speaker': speaker }, result);
 }
 
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function escapeXml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}

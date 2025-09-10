@@ -1,5 +1,6 @@
 import { createElement } from '../core/createElement';
 import { Component, BaseComponentProps } from '../types';
+import { escapeHtml, escapeXml, repeatChar, processTemplateVars } from '../utils';
 
 export interface ObjectProps extends BaseComponentProps {
   /** Object data to display */
@@ -10,6 +11,8 @@ export interface ObjectProps extends BaseComponentProps {
   name?: string;
   /** Whether to display inline */
   inline?: boolean;
+  /** Template variables for dynamic content */
+  templateVars?: Record<string, any>;
 }
 
 export function Object(props: ObjectProps): Component {
@@ -205,10 +208,10 @@ function generateTextObject(
   
   if (name) {
     result += `OBJECT: ${name}\n`;
-    result += '='.repeat(Math.max(7, name.length + 7)) + '\n\n';
+    result += repeatChar('=', Math.max(7, name.length + 7)) + '\n\n';
   } else {
     result += 'OBJECT\n';
-    result += '======\n\n';
+    result += repeatChar('=', 6) + '\n\n';
   }
   
   if (type) {
@@ -224,20 +227,3 @@ function generateTextObject(
   return createElement('div', { className, 'data-speaker': speaker }, result);
 }
 
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function escapeXml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}

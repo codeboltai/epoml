@@ -1,5 +1,6 @@
 import { createElement } from '../core/createElement';
 import { Component, BaseComponentProps } from '../types';
+import { escapeXml, repeatChar } from '../utils';
 
 export interface DocumentProps extends BaseComponentProps {
   /** Document title */
@@ -326,10 +327,10 @@ function generateTextDocument(
   
   if (title) {
     result += `DOCUMENT: ${title}\n`;
-    result += '='.repeat(Math.max(9, title.length + 9)) + '\n\n';
+    result += repeatChar('=', Math.max(9, title.length + 9)) + '\n\n';
   } else {
     result += 'DOCUMENT\n';
-    result += '========\n\n';
+    result += repeatChar('=', 8) + '\n\n';
   }
   
   if (author || version || date) {
@@ -372,11 +373,3 @@ function generateTextDocument(
   return createElement('div', { className, 'data-speaker': speaker }, result);
 }
 
-function escapeXml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}

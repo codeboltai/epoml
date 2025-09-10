@@ -1,4 +1,5 @@
 import { createElement } from '../core/createElement';
+import { createElement } from '../core/createElement';
 import { Component, BaseComponentProps } from '../types';
 import { escapeHtml, escapeXml, processTemplateVars, repeatChar } from '../utils';
 
@@ -19,6 +20,8 @@ export interface TaskProps extends BaseComponentProps {
   dueDate?: string;
   /** Whether the task is blocked */
   blocked?: boolean;
+  /** Template variables for dynamic content */
+  templateVars?: Record<string, any>;
 }
 
 export function Task(props: TaskProps): Component {
@@ -31,32 +34,38 @@ export function Task(props: TaskProps): Component {
     assignee,
     dueDate,
     blocked = false,
+    templateVars = {},
     syntax = 'text',
     className,
     speaker,
     children = []
   } = props;
 
+  // Process template variables in text content
+  const processedTitle = title ? processTemplateVars(title, templateVars) : title;
+  const processedDescription = description ? processTemplateVars(description, templateVars) : description;
+  const processedAssignee = assignee ? processTemplateVars(assignee, templateVars) : assignee;
+
   // Generate the component based on syntax
   switch (syntax) {
     case 'markdown':
-      return generateMarkdownTask(id, title, description, status, priority, assignee, dueDate, blocked, children, className, speaker);
+      return generateMarkdownTask(id, processedTitle, processedDescription, status, priority, processedAssignee, dueDate, blocked, children, className, speaker);
     
     case 'html':
-      return generateHtmlTask(id, title, description, status, priority, assignee, dueDate, blocked, children, className, speaker);
+      return generateHtmlTask(id, processedTitle, processedDescription, status, priority, processedAssignee, dueDate, blocked, children, className, speaker);
     
     case 'json':
-      return generateJsonTask(id, title, description, status, priority, assignee, dueDate, blocked, children, className, speaker);
+      return generateJsonTask(id, processedTitle, processedDescription, status, priority, processedAssignee, dueDate, blocked, children, className, speaker);
     
     case 'yaml':
-      return generateYamlTask(id, title, description, status, priority, assignee, dueDate, blocked, children, className, speaker);
+      return generateYamlTask(id, processedTitle, processedDescription, status, priority, processedAssignee, dueDate, blocked, children, className, speaker);
     
     case 'xml':
-      return generateXmlTask(id, title, description, status, priority, assignee, dueDate, blocked, children, className, speaker);
+      return generateXmlTask(id, processedTitle, processedDescription, status, priority, processedAssignee, dueDate, blocked, children, className, speaker);
     
     case 'text':
     default:
-      return generateTextTask(id, title, description, status, priority, assignee, dueDate, blocked, children, className, speaker);
+      return generateTextTask(id, processedTitle, processedDescription, status, priority, processedAssignee, dueDate, blocked, children, className, speaker);
   }
 }
 
@@ -410,7 +419,7 @@ function generateTextTask(
   }[priority];
   
   let result = `TASK: ${statusEmoji} ${priorityEmoji} ${title || 'Untitled Task'}${id ? ` (${id})` : ''}\n`;
-  result += '-'.repeat(Math.max(5, (title?.length || 12) + 10)) + '\n\n';
+  result += repeatChar('-', Math.max(5, (title?.length || 12) + 10)) + '\n\n';
   
   if (description) {
     result += `Description: ${description}\n\n`;
@@ -442,20 +451,3 @@ function generateTextTask(
   return createElement('div', { className, 'data-speaker': speaker }, result);
 }
 
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function escapeXml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}

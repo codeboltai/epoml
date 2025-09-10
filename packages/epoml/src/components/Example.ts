@@ -1,5 +1,6 @@
 import { createElement } from '../core/createElement';
 import { Component, BaseComponentProps } from '../types';
+import { escapeHtml, escapeXml, escapeXmlAttr, repeatChar } from '../utils';
 
 export interface ExampleProps extends BaseComponentProps {
   /** Title for the example */
@@ -299,7 +300,7 @@ function generateTextExample(
   const bestPracticeMarker = bestPractice ? ' ⭐' : '';
   
   let result = `EXAMPLE: 📝${title ? ` ${title}` : ''}${bestPracticeMarker} ${difficultyEmoji}\n`;
-  result += '='.repeat(Math.max(8, (title?.length || 0) + 8)) + '\n\n';
+  result += repeatChar('=', Math.max(8, (title?.length || 0) + 8)) + '\n\n';
   
   if (description) {
     result += `Description: ${description}\n\n`;
@@ -322,29 +323,3 @@ function generateTextExample(
   return createElement('div', { className, 'data-speaker': speaker }, result);
 }
 
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function escapeXml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function escapeXmlAttr(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
-}
