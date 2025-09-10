@@ -6,8 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node src/epoml-example.ts",
-    "start": "node dist/epoml-example.js"
+    "dev": "ts-node src/custom-component-test.ts",
+    "start": "node dist/custom-component-test.js"
   },
   "keywords": [],
   "author": "",
