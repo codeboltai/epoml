@@ -1,12 +1,9 @@
 {
-  "name": "epoml",
+  "name": "@epoml/types",
   "version": "1.0.0",
-  "description": "",
+  "description": "Types for EPOC ML",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "tsc"
   },
@@ -15,10 +12,5 @@
   "license": "ISC",
   "devDependencies": {
     "typescript": "^5.9.2"
-  },
-  "dependencies": {
-    "@swc/core": "^1.13.5",
-    "@types/node": "^24.3.1",
-    "ts-node": "^10.9.2"
   }
 }
