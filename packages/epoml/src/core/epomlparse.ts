@@ -3,7 +3,29 @@ import { render } from './renderer';
 import { createElement } from './createElement';
 import { Fragment } from './Fragment';
 import { registerComponent, unregisterComponent, getComponent, clearComponents } from './componentRegistry';
-import { FileTree } from '../components/FileTree';
+import { 
+  Audio, 
+  Bold, 
+  CaptionedParagraph, 
+  Code,
+  Document,
+  ExampleInput,
+  ExampleOutput,
+  ExampleSet,
+  FileTree, 
+  Header,
+  Hint,
+  Image,
+  Inline,
+  Introducer,
+  Object as DataObject,
+  OutputFormat,
+  Question,
+  Role,
+  StepwiseInstructions,
+  Table,
+  Task
+} from '../components';
 
 /**
  * Parse EPOML (Enhanced Plain Old Markup Language) and convert it to a string
@@ -40,7 +62,29 @@ export async function epomlparse(prompt: string, variables?: Record<string, any>
   (global as any).unregisterComponent = unregisterComponent;
   (global as any).getComponent = getComponent;
   (global as any).clearComponents = clearComponents;
+  
+  // Make all built-in components available globally for the eval
+  (global as any).Audio = Audio;
+  (global as any).Bold = Bold;
+  (global as any).CaptionedParagraph = CaptionedParagraph;
+  (global as any).Code = Code;
+  (global as any).Document = Document;
+  (global as any).ExampleInput = ExampleInput;
+  (global as any).ExampleOutput = ExampleOutput;
+  (global as any).ExampleSet = ExampleSet;
   (global as any).FileTree = FileTree;
+  (global as any).Header = Header;
+  (global as any).Hint = Hint;
+  (global as any).Image = Image;
+  (global as any).Inline = Inline;
+  (global as any).Introducer = Introducer;
+  (global as any).DataObject = DataObject;
+  (global as any).OutputFormat = OutputFormat;
+  (global as any).Question = Question;
+  (global as any).Role = Role;
+  (global as any).StepwiseInstructions = StepwiseInstructions;
+  (global as any).Table = Table;
+  (global as any).Task = Task;
   
   // Make variables available globally for the eval
   if (variables) {
