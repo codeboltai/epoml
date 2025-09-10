@@ -2,6 +2,7 @@
   "name": "@epoml/example",
   "version": "1.0.0",
   "description": "Example usage of EPOML library",
+  "private": true,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

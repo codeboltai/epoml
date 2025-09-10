@@ -1,18 +1,43 @@
 {
   "name": "epoml",
   "version": "1.0.0",
-  "description": "",
+  "description": "Enhanced Prompt Orchestration Markup Language - A JSX-based template engine that renders to plain text",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "MIGRATION.md"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "template",
+    "jsx",
+    "markup",
+    "text",
+    "typescript",
+    "epoml",
+    "template-engine",
+    "prompt",
+    "orchestration",
+    "ai",
+    "llm",
+    "prompt-engineering"
+  ],
+  "author": "EPOML Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/epoml.git",
+    "directory": "packages/epoml"
+  },
+  "homepage": "https://github.com/your-username/epoml#readme",
+  "bugs": {
+    "url": "https://github.com/your-username/epoml/issues"
+  },
   "devDependencies": {
     "typescript": "^5.9.2"
   },

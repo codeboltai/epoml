@@ -1,9 +1,9 @@
 import * as swc from '@swc/core';
-import { render } from './core/renderer';
-import { createElement } from './core/createElement';
-import { Fragment } from './core/Fragment';
-import { registerComponent, unregisterComponent, getComponent, clearComponents } from './core/componentRegistry';
-import { FileTree } from './components/FileTree';
+import { render } from './renderer';
+import { createElement } from './createElement';
+import { Fragment } from './Fragment';
+import { registerComponent, unregisterComponent, getComponent, clearComponents } from './componentRegistry';
+import { FileTree } from '../components/FileTree';
 
 /**
  * Parse EPOML (Enhanced Plain Old Markup Language) and convert it to a string

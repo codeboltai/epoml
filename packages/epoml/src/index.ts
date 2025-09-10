@@ -18,7 +18,7 @@ import {
   type HeaderProps,
   type InlineProps
 } from './components';
-import { epomlparse } from './epomlparse';
+import { epomlparse } from './core/epomlparse';
 import { type TemplateVariables, type Component } from './types';
 
 // Export the core functions, components, epomlparse function, and component registry functions

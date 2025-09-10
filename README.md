@@ -1,92 +1,85 @@
 # Turborepo starter
+# EPOML Monorepo
 
-This Turborepo starter is maintained by the Turborepo core team.
+EPOML (Enhanced Prompt Orchestration Markup Language) is a JSX-based template engine for orchestrating prompts and rendering to plain text. This monorepo contains the core EPOML library and examples.
 
-## Using this example
+## Packages
 
-Run the following command:
+- **`epoml`**: The main EPOML library package (published to npm)
+- **`@epoml/example`**: Examples and demos (private)
 
-```sh
-npx create-turbo@latest
+## Quick Start
+
+```bash
+# Install dependencies
+pnpm install
+
+# Build all packages
+pnpm build
+
+# Run examples
+cd packages/example
+pnpm run example:basic
 ```
 
-## What's inside?
+## Development
 
-This Turborepo includes the following packages/apps:
+### Building
 
-### Apps and Packages
+```bash
+# Build all packages
+pnpm build
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+# Build specific package
+pnpm build --filter=epoml
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### Running Examples
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+```bash
+# Basic example
+pnpm --filter=@epoml/example run example:basic
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+# Template variables demo
+pnpm --filter=@epoml/example run example:demo
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+# Custom component example
+pnpm --filter=@epoml/example run dev
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## Publishing
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+We use [Changesets](https://github.com/changesets/changesets) for version management and publishing. See [PUBLISHING.md](./PUBLISHING.md) for detailed instructions.
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+```bash
+# Create a changeset for your changes
+pnpm changeset
+
+# Release to npm (automated via GitHub Actions)
+pnpm release
 ```
+
+## Package Details
+
+### EPOML Core Library
+
+The main library is published to npm as `epoml`. It provides:
+
+- JSX-based template syntax for prompt orchestration
+- Multiple output formats (markdown, html, json, yaml, xml, text)
+- Template variables support for dynamic prompt generation
+- Custom component registration for reusable prompt patterns
+- File tree generation for context injection
+- Audio/multimedia support for rich prompts
+
+### Examples Package
+
+The examples package contains:
+
+- Basic usage examples
+- Template variable demonstrations
+- Custom component examples
+- Test files for functionality verification
 
 ### Remote Caching
 

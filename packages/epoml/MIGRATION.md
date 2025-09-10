@@ -2,7 +2,7 @@
 
 ## Overview
 
-EPOML has been refactored to use direct function exports instead of the `Epoml` namespace wrapper. This provides better tree-shaking, follows React-like patterns, and improves developer experience.
+EPOML (Enhanced Prompt Orchestration Markup Language) has been refactored to use direct function exports instead of the `Epoml` namespace wrapper. This provides better tree-shaking, follows React-like patterns, and improves developer experience.
 
 ## What Changed
 

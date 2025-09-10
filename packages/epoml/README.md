@@ -1,6 +1,8 @@
-# EPOML (Enhanced Plain Old Markup Language)
 
-EPOML is a JSX-based template engine that allows you to write structured content using JSX syntax and render it to plain text. It uses SWC (Speedy Web Compiler) for fast JSX transformation, making it efficient for runtime template processing.
+# EPOML (Enhanced Prompt Orchestration Markup Language)
+
+
+EPOML is a JSX-based template engine for orchestrating prompts and rendering to plain text. It uses SWC (Speedy Web Compiler) for fast JSX transformation, making it efficient for runtime template processing and AI prompt generation.
 
 ## Installation
 
