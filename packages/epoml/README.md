@@ -114,9 +114,9 @@ Renders an EPOML component tree to a string. This is the underlying function use
 
 **Example:**
 ```javascript
-import { render, Epoml } from 'epoml';
+import { render, createElement } from 'epoml';
 
-const component = Epoml.createElement('p', {}, 'Hello World');
+const component = createElement('p', {}, 'Hello World');
 const result = await render(component);
 ```
 
@@ -129,10 +129,10 @@ EPOML uses SWC (Speedy Web Compiler) for JSX transformation, which provides sign
 You can create custom components by defining functions that return EPOML elements:
 
 ```javascript
-import { Epoml } from 'epoml';
+import { createElement } from 'epoml';
 
 function MyComponent({ name }) {
-  return Epoml.createElement('p', {}, `Hello, ${name}!`);
+  return createElement('p', {}, `Hello, ${name}!`);
 }
 ```
 
@@ -151,20 +151,20 @@ const output = await epomlparse(prompt);
 Here's a more advanced example showing how to create custom components with the Epoml namespace:
 
 ```javascript
-import { epomlparse, Epoml, registerComponent, type Component } from 'epoml';
+import { epomlparse, createElement, registerComponent, type Component } from 'epoml';
 
-// Define a custom component using the Epoml namespace
+// Define a custom component using createElement
 function Note({ title, children }: { title: string; children: (Component | string)[] }): Component {
-  return Epoml.createElement('div', {}, 
-    Epoml.createElement('p', {}, `📝 Note: ${title}`),
-    Epoml.createElement('p', {}, ...children)
+  return createElement('div', {}, 
+    createElement('p', {}, `📝 Note: ${title}`),
+    createElement('p', {}, ...children)
   );
 }
 
 // Another custom component that creates a todo item
 function Todo({ item, completed }: { item: string; completed?: boolean }): Component {
   const status = completed ? '✅' : '⏳';
-  return Epoml.createElement('p', {}, `${status} ${item}`);
+  return createElement('p', {}, `${status} ${item}`);
 }
 
 // Register the custom components
@@ -188,7 +188,7 @@ const output = await epomlparse(template);
 ```
 
 This example demonstrates:
-1. Creating custom components using `Epoml.createElement`
+1. Creating custom components using `createElement`
 2. Defining component props and children
 3. Registering components with `registerComponent`
 4. Using the components in EPOML templates

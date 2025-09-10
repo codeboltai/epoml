@@ -10,7 +10,7 @@
     "strict": true,
     "skipLibCheck": true,
     "jsx": "react",
-    "jsxFactory": "Epoml.createElement",
-    "jsxFragmentFactory": "Epoml.Fragment"
+    "jsxFactory": "createElement",
+    "jsxFragmentFactory": "Fragment"
   }
 }

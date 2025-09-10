@@ -1,4 +1,5 @@
-import { Epoml, Component } from '../epoml';
+import { createElement } from '../epoml';
+import { Component } from '../types';
 
 export interface CodeProps {
   /** Whether to render code inline or as a block. Default is true. */
@@ -97,7 +98,7 @@ function generateMarkdownCode(
   
   if (blankLine && !inline) result += '\n';
   
-  return Epoml.createElement(inline ? 'span' : 'div', { className, 'data-speaker': speaker }, result);
+  return createElement(inline ? 'span' : 'div', { className, 'data-speaker': speaker }, result);
 }
 
 function generateHtmlCode(
@@ -116,15 +117,15 @@ function generateHtmlCode(
   }
   
   if (inline) {
-    return Epoml.createElement('code', codeProps, content);
+    return createElement('code', codeProps, content);
   } else {
     const elements: (Component | string)[] = [];
     
     if (blankLine) elements.push('\n');
-    elements.push(Epoml.createElement('code', codeProps, content));
+    elements.push(createElement('code', codeProps, content));
     if (blankLine) elements.push('\n');
     
-    return Epoml.createElement('pre', { 'data-speaker': speaker }, ...elements);
+    return createElement('pre', { 'data-speaker': speaker }, ...elements);
   }
 }
 
@@ -144,7 +145,7 @@ function generateJsonCode(
   if (name) obj.name = name;
   if (type) obj.type = type;
   
-  return Epoml.createElement('pre', { className, 'data-speaker': speaker }, JSON.stringify(obj, null, 2));
+  return createElement('pre', { className, 'data-speaker': speaker }, JSON.stringify(obj, null, 2));
 }
 
 function generateYamlCode(
@@ -161,7 +162,7 @@ function generateYamlCode(
     yamlContent += `\nlanguage: ${JSON.stringify(lang)}`;
   }
   
-  return Epoml.createElement('pre', { className, 'data-speaker': speaker }, yamlContent);
+  return createElement('pre', { className, 'data-speaker': speaker }, yamlContent);
 }
 
 function generateXmlCode(
@@ -186,7 +187,7 @@ function generateXmlCode(
   
   const xmlContent = `<${tagName}${langAttr}${typeAttr}>${escapedContent}</${tagName}>`;
   
-  return Epoml.createElement('pre', { className, 'data-speaker': speaker }, xmlContent);
+  return createElement('pre', { className, 'data-speaker': speaker }, xmlContent);
 }
 
 function generateTextCode(
@@ -210,7 +211,7 @@ function generateTextCode(
   
   if (blankLine && !inline) result += '\n';
   
-  return Epoml.createElement(inline ? 'span' : 'div', { className, 'data-speaker': speaker }, result);
+  return createElement(inline ? 'span' : 'div', { className, 'data-speaker': speaker }, result);
 }
 
 function applyWhitespaceHandling(content: string, whiteSpace: string): string {

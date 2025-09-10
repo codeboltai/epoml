@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Epoml, Component } from '../epoml';
+import { createElement } from '../epoml';
+import { Component } from '../types';
 
 export interface AudioProps {
   /** Path to the audio file. If provided, the file will be read and encoded as base64. */
@@ -64,7 +65,7 @@ export function Audio(props: AudioProps): Component {
       }
     } catch (error) {
       if (alt) {
-        return Epoml.createElement('span', {}, alt);
+        return createElement('span', {}, alt);
       }
       throw new Error(`Failed to read audio file: ${src}`);
     }
@@ -80,10 +81,10 @@ export function Audio(props: AudioProps): Component {
     // For multimedia syntax, create a data URL
     const dataUrl = `data:${mimeType || 'audio/mpeg'};base64,${audioData}`;
     // For multimedia, return a descriptive text since we can't actually play audio in text output
-    return Epoml.createElement('span', {}, `[Audio: ${mimeType || 'audio/mpeg'}]`);
+    return createElement('span', {}, `[Audio: ${mimeType || 'audio/mpeg'}]`);
   } else if (syntax === 'html') {
     const dataUrl = `data:${mimeType || 'audio/mpeg'};base64,${audioData}`;
-    return Epoml.createElement('audio', { 
+    return createElement('audio', { 
       src: dataUrl, 
       controls: true,
       style: getPositionStyle(position)
@@ -91,13 +92,13 @@ export function Audio(props: AudioProps): Component {
   } else if (syntax === 'markdown') {
     const dataUrl = `data:${mimeType || 'audio/mpeg'};base64,${audioData}`;
     // Markdown doesn't have native audio support, so use HTML
-    return Epoml.createElement('span', {}, `<audio src="${dataUrl}" controls></audio>`);
+    return createElement('span', {}, `<audio src="${dataUrl}" controls></audio>`);
   } else {
     // For other syntaxes, show alt text or descriptive text
     if (alt) {
-      return Epoml.createElement('span', {}, alt);
+      return createElement('span', {}, alt);
     }
-    return Epoml.createElement('span', {}, `[Audio file: ${src || 'base64 data'}]`);
+    return createElement('span', {}, `[Audio file: ${src || 'base64 data'}]`);
   }
 }
 

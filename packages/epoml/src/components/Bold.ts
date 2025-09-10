@@ -1,4 +1,5 @@
-import { Epoml, Component } from '../epoml';
+import { createElement } from '../epoml';
+import { Component } from '../types';
 
 export interface BoldProps {
   /** The syntax of the content. Can be one of: markdown, html, json, yaml, xml, text. */
@@ -45,21 +46,21 @@ export function Bold(props: BoldProps): Component {
   // Apply syntax-specific formatting
   switch (syntax) {
     case 'markdown':
-      return Epoml.createElement('span', { className, 'data-speaker': speaker }, `**${content}**`);
+      return createElement('span', { className, 'data-speaker': speaker }, `**${content}**`);
     
     case 'html':
-      return Epoml.createElement('b', { className, 'data-speaker': speaker }, content);
+      return createElement('b', { className, 'data-speaker': speaker }, content);
     
     case 'json':
     case 'yaml':
     case 'xml':
       // For structured formats, return plain content since bold formatting isn't applicable
-      return Epoml.createElement('span', { className, 'data-speaker': speaker }, content);
+      return createElement('span', { className, 'data-speaker': speaker }, content);
     
     case 'text':
     default:
       // For plain text, we can use uppercase or other text transformation
-      return Epoml.createElement('span', { className, 'data-speaker': speaker }, content.toUpperCase());
+      return createElement('span', { className, 'data-speaker': speaker }, content.toUpperCase());
   }
 }
 

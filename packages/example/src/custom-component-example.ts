@@ -1,18 +1,18 @@
-import { epomlparse, Epoml, registerComponent, type Component } from 'epoml';
+import { epomlparse, createElement, registerComponent, type Component } from 'epoml';
 
-// Define a custom component using the Epoml namespace
+// Define a custom component using createElement
 function Note({ title, children }: { title: string; children: (Component | string)[] }): Component {
-  // Using Epoml.createElement to create the component structure
-  return Epoml.createElement('div', {}, 
-    Epoml.createElement('p', {}, `📝 Note: ${title}`),
-    Epoml.createElement('p', {}, ...children)
+  // Using createElement to create the component structure
+  return createElement('div', {}, 
+    createElement('p', {}, `📝 Note: ${title}`),
+    createElement('p', {}, ...children)
   );
 }
 
 // Another custom component that creates a todo item
 function Todo({ item, completed }: { item: string; completed?: boolean }): Component {
   const status = completed ? '✅' : '⏳';
-  return Epoml.createElement('p', {}, `${status} ${item}`);
+  return createElement('p', {}, `${status} ${item}`);
 }
 
 // Register the custom components

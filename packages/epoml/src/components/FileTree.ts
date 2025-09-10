@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Epoml, Component } from '../epoml';
+import { createElement } from '../epoml';
+import { Component } from '../types';
 
 export function FileTree({ depth = 1, directory }: { depth?: number; directory?: string }): Component {
   let tree = '\n';
@@ -28,5 +29,5 @@ export function FileTree({ depth = 1, directory }: { depth?: number; directory?:
   }
 
   getTree(root, 1, '');
-  return Epoml.createElement('pre', {}, tree);
+  return createElement('pre', {}, tree);
 }

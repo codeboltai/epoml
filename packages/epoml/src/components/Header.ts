@@ -1,4 +1,5 @@
-import { Epoml, Component } from '../epoml';
+import { createElement } from '../epoml';
+import { Component } from '../types';
 
 export interface HeaderProps {
   /** Whether to add one more blank line (2 in total) before and after the paragraph. */
@@ -91,7 +92,7 @@ function generateMarkdownHeader(
   
   if (blankLine) result += '\n';
   
-  return Epoml.createElement('div', { className, 'data-speaker': speaker }, result);
+  return createElement('div', { className, 'data-speaker': speaker }, result);
 }
 
 function generateHtmlHeader(
@@ -109,7 +110,7 @@ function generateHtmlHeader(
   const headerLevel = Math.max(1, Math.min(6, level));
   const tagName = `h${headerLevel}`;
   
-  const headerElement = Epoml.createElement(tagName, { className, 'data-speaker': speaker }, content);
+  const headerElement = createElement(tagName, { className, 'data-speaker': speaker }, content);
   elements.push(headerElement);
   
   if (blankLine) elements.push('\n');
@@ -118,7 +119,7 @@ function generateHtmlHeader(
     return elements[0] as Component;
   }
   
-  return Epoml.createElement('div', { 'data-speaker': speaker }, ...elements);
+  return createElement('div', { 'data-speaker': speaker }, ...elements);
 }
 
 function generateJsonHeader(
@@ -136,7 +137,7 @@ function generateJsonHeader(
   
   if (type) obj.type = type;
   
-  return Epoml.createElement('pre', { className, 'data-speaker': speaker }, JSON.stringify(obj, null, 2));
+  return createElement('pre', { className, 'data-speaker': speaker }, JSON.stringify(obj, null, 2));
 }
 
 function generateYamlHeader(
@@ -149,7 +150,7 @@ function generateYamlHeader(
   const key = name || 'header';
   const yamlContent = `${key}: ${JSON.stringify(content)}\nlevel: ${level}`;
   
-  return Epoml.createElement('pre', { className, 'data-speaker': speaker }, yamlContent);
+  return createElement('pre', { className, 'data-speaker': speaker }, yamlContent);
 }
 
 function generateXmlHeader(
@@ -174,7 +175,7 @@ function generateXmlHeader(
   
   const xmlContent = `<${tagName}${levelAttr}${typeAttr}>${escapedContent}</${tagName}>`;
   
-  return Epoml.createElement('pre', { className, 'data-speaker': speaker }, xmlContent);
+  return createElement('pre', { className, 'data-speaker': speaker }, xmlContent);
 }
 
 function generateTextHeader(
@@ -213,7 +214,7 @@ function generateTextHeader(
   
   if (blankLine) result += '\n';
   
-  return Epoml.createElement('div', { className, 'data-speaker': speaker }, result);
+  return createElement('div', { className, 'data-speaker': speaker }, result);
 }
 
 function applyWhitespaceHandling(content: string, whiteSpace: string): string {

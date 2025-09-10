@@ -1,5 +1,5 @@
 import * as swc from '@swc/core';
-import { render, Epoml, registerComponent, unregisterComponent, getComponent, clearComponents } from './epoml';
+import { render, createElement, Fragment, registerComponent, unregisterComponent, getComponent, clearComponents } from './epoml';
 import { FileTree } from './components/FileTree';
 
 /**
@@ -19,8 +19,8 @@ export async function epomlparse(prompt: string, variables?: Record<string, any>
       transform: {
         react: {
           runtime: 'classic',
-          pragma: 'Epoml.createElement',
-          pragmaFrag: 'Epoml.Fragment',
+          pragma: 'createElement',
+          pragmaFrag: 'Fragment',
           importSource: 'epoml',
         },
       },
@@ -30,8 +30,9 @@ export async function epomlparse(prompt: string, variables?: Record<string, any>
     },
   });
 
-  // Make Epoml and component registry functions available globally for the eval
-  (global as any).Epoml = Epoml;
+  // Make createElement, Fragment and component registry functions available globally for the eval
+  (global as any).createElement = createElement;
+  (global as any).Fragment = Fragment;
   (global as any).registerComponent = registerComponent;
   (global as any).unregisterComponent = unregisterComponent;
   (global as any).getComponent = getComponent;

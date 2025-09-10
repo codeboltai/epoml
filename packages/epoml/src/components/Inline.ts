@@ -1,4 +1,5 @@
-import { Epoml, Component } from '../epoml';
+import { createElement } from '../epoml';
+import { Component } from '../types';
 
 export interface InlineProps {
   /** The syntax of the content. */
@@ -58,7 +59,7 @@ function generateMarkdownInline(
 ): Component {
   // For markdown, inline content is rendered as-is without any markdown formatting
   // since it's meant to be inline text without preceding or following blank characters
-  return Epoml.createElement('span', { className, 'data-speaker': speaker }, content);
+  return createElement('span', { className, 'data-speaker': speaker }, content);
 }
 
 function generateHtmlInline(
@@ -67,7 +68,7 @@ function generateHtmlInline(
   speaker?: string
 ): Component {
   // Use HTML span element for inline content
-  return Epoml.createElement('span', { className, 'data-speaker': speaker }, content);
+  return createElement('span', { className, 'data-speaker': speaker }, content);
 }
 
 function generateJsonInline(
@@ -77,7 +78,7 @@ function generateJsonInline(
 ): Component {
   // In serializer syntaxes, inline is treated as a generic value
   // Return the content as a JSON string value
-  return Epoml.createElement('span', { className, 'data-speaker': speaker }, JSON.stringify(content));
+  return createElement('span', { className, 'data-speaker': speaker }, JSON.stringify(content));
 }
 
 function generateYamlInline(
@@ -86,7 +87,7 @@ function generateYamlInline(
   speaker?: string
 ): Component {
   // For YAML, return as a quoted string value
-  return Epoml.createElement('span', { className, 'data-speaker': speaker }, JSON.stringify(content));
+  return createElement('span', { className, 'data-speaker': speaker }, JSON.stringify(content));
 }
 
 function generateXmlInline(
@@ -102,7 +103,7 @@ function generateXmlInline(
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
   
-  return Epoml.createElement('span', { className, 'data-speaker': speaker }, `<span>${escapedContent}</span>`);
+  return createElement('span', { className, 'data-speaker': speaker }, `<span>${escapedContent}</span>`);
 }
 
 function generateTextInline(
@@ -111,7 +112,7 @@ function generateTextInline(
   speaker?: string
 ): Component {
   // For plain text, return content as-is
-  return Epoml.createElement('span', { className, 'data-speaker': speaker }, content);
+  return createElement('span', { className, 'data-speaker': speaker }, content);
 }
 
 function applyWhitespaceHandling(content: string, whiteSpace: string): string {

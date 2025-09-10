@@ -1,4 +1,5 @@
-import { Epoml, Component } from '../epoml';
+import { createElement } from '../epoml';
+import { Component } from '../types';
 
 export interface CaptionedParagraphProps {
   /** The title or label for the paragraph. Required. */
@@ -144,7 +145,7 @@ function generateMarkdownCaptionedParagraph(
   
   if (blankLine) result += '\n';
   
-  return Epoml.createElement('div', { className, 'data-speaker': speaker }, result);
+  return createElement('div', { className, 'data-speaker': speaker }, result);
 }
 
 function generateHtmlCaptionedParagraph(
@@ -165,14 +166,14 @@ function generateHtmlCaptionedParagraph(
     
     switch (style) {
       case 'header':
-        captionElement = Epoml.createElement('h3', {}, caption);
+        captionElement = createElement('h3', {}, caption);
         break;
       case 'bold':
-        captionElement = Epoml.createElement('strong', {}, caption);
+        captionElement = createElement('strong', {}, caption);
         break;
       case 'plain':
       default:
-        captionElement = Epoml.createElement('span', {}, caption);
+        captionElement = createElement('span', {}, caption);
         break;
     }
     
@@ -196,7 +197,7 @@ function generateHtmlCaptionedParagraph(
   
   if (blankLine) elements.push('\n');
   
-  return Epoml.createElement('div', { className, 'data-speaker': speaker }, ...elements);
+  return createElement('div', { className, 'data-speaker': speaker }, ...elements);
 }
 
 function generateJsonCaptionedParagraph(
@@ -214,7 +215,7 @@ function generateJsonCaptionedParagraph(
   
   if (type) obj._type = type;
   
-  return Epoml.createElement('pre', { className, 'data-speaker': speaker }, JSON.stringify(obj, null, 2));
+  return createElement('pre', { className, 'data-speaker': speaker }, JSON.stringify(obj, null, 2));
 }
 
 function generateYamlCaptionedParagraph(
@@ -227,7 +228,7 @@ function generateYamlCaptionedParagraph(
   const key = name || caption.toLowerCase().replace(/\s+/g, '_');
   const yamlContent = `${key}: ${JSON.stringify(content)}`;
   
-  return Epoml.createElement('pre', { className, 'data-speaker': speaker }, yamlContent);
+  return createElement('pre', { className, 'data-speaker': speaker }, yamlContent);
 }
 
 function generateXmlCaptionedParagraph(
@@ -242,7 +243,7 @@ function generateXmlCaptionedParagraph(
   const typeAttr = type ? ` type="${type}"` : '';
   const xmlContent = `<${tagName}${typeAttr}>${content}</${tagName}>`;
   
-  return Epoml.createElement('pre', { className, 'data-speaker': speaker }, xmlContent);
+  return createElement('pre', { className, 'data-speaker': speaker }, xmlContent);
 }
 
 function generateTextCaptionedParagraph(
@@ -280,7 +281,7 @@ function generateTextCaptionedParagraph(
   
   if (blankLine) result += '\n';
   
-  return Epoml.createElement('div', { className, 'data-speaker': speaker }, result);
+  return createElement('div', { className, 'data-speaker': speaker }, result);
 }
 
 function applyTextTransform(text: string, transform: string): string {
