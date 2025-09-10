@@ -1,5 +1,6 @@
 import { createElement } from '../core/createElement';
 import { Component, BaseComponentProps } from '../types';
+import { escapeHtml, escapeXml, processTemplateVars, repeatChar } from '../utils';
 
 export interface TaskProps extends BaseComponentProps {
   /** Task ID */

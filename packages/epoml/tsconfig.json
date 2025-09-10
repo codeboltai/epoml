@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "target": "es2018",
     "module": "commonjs",
     "rootDir": "./src",
     "declaration": true,
@@ -11,7 +11,8 @@
     "skipLibCheck": true,
     "jsx": "react",
     "jsxFactory": "createElement",
-    "jsxFragmentFactory": "Fragment"
+    "jsxFragmentFactory": "Fragment",
+    "downlevelIteration": true
   },
   "include": ["src/**/*"]
 }
