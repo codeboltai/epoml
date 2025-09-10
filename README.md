@@ -67,10 +67,22 @@ The main library is published to npm as `epoml`. It provides:
 
 - JSX-based template syntax for prompt orchestration
 - Multiple output formats (markdown, html, json, yaml, xml, text)
-- Template variables support for dynamic prompt generation
+- Enhanced template variables support with `{variableName}` syntax
+- 20+ built-in components with comprehensive template variable support
 - Custom component registration for reusable prompt patterns
+- Robust TypeScript compilation with 0 errors
 - File tree generation for context injection
 - Audio/multimedia support for rich prompts
+- Shared utility functions for text processing and escaping
+
+### Recent Improvements ✨
+
+- **Fixed all TypeScript compilation errors**: Resolved 192+ syntax errors across components
+- **Enhanced template variable support**: Added `{variableName}` processing to all major components
+- **New component documentation**: Complete docs for ExampleInput, ExampleOutput, ExampleSet, Object, and OutputFormat
+- **Shared utilities module**: Centralized text processing, escaping, and validation functions
+- **Improved inline rendering**: Better support for compact display modes
+- **Updated TypeScript target**: Upgraded to ES2018 with downlevel iteration support
 
 ### Examples Package
 

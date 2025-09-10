@@ -512,6 +512,261 @@ interface InlineProps extends BaseComponentProps {
 }
 ```
 
+## Utility Functions
+
+EPOML provides several utility functions for text processing, formatting, and template variable handling.
+
+### `escapeHtml(text)`
+
+Escapes HTML special characters to prevent XSS vulnerabilities.
+
+```typescript
+function escapeHtml(text: string): string
+```
+
+**Parameters:**
+- `text: string` - The text to escape
+
+**Returns:**
+- `string` - The escaped text with HTML entities
+
+**Example:**
+```typescript
+import { escapeHtml } from 'epoml';
+
+const userInput = '<script>alert("xss")</script>';
+const safe = escapeHtml(userInput);
+console.log(safe); // &lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;
+```
+
+### `escapeXml(text)`
+
+Escapes XML special characters for safe XML output.
+
+```typescript
+function escapeXml(text: string): string
+```
+
+**Parameters:**
+- `text: string` - The text to escape
+
+**Returns:**
+- `string` - The escaped text with XML entities
+
+**Example:**
+```typescript
+import { escapeXml } from 'epoml';
+
+const xmlContent = 'A & B < C > D "quote" \'apos\'';
+const escaped = escapeXml(xmlContent);
+console.log(escaped); // A &amp; B &lt; C &gt; D &quot;quote&quot; &#39;apos&#39;
+```
+
+### `processTemplateVars(text, context)`
+
+Processes template variables in text content by replacing `{variableName}` patterns.
+
+```typescript
+function processTemplateVars(text: string, context?: Record<string, any>): string
+```
+
+**Parameters:**
+- `text: string` - The text containing template variables
+- `context?: Record<string, any>` - Object containing variable values (default: {})
+
+**Returns:**
+- `string` - The text with variables replaced by actual values
+
+**Example:**
+```typescript
+import { processTemplateVars } from 'epoml';
+
+const template = 'Hello {name}, you have {count} messages';
+const context = { name: 'Alice', count: 5 };
+const result = processTemplateVars(template, context);
+console.log(result); // Hello Alice, you have 5 messages
+```
+
+### `validateSyntax(syntax)`
+
+Validates if a syntax type is supported by EPOML.
+
+```typescript
+function validateSyntax(syntax: string): boolean
+```
+
+**Parameters:**
+- `syntax: string` - The syntax type to validate
+
+**Returns:**
+- `boolean` - `true` if the syntax is supported, `false` otherwise
+
+**Example:**
+```typescript
+import { validateSyntax } from 'epoml';
+
+console.log(validateSyntax('markdown')); // true
+console.log(validateSyntax('json'));     // true
+console.log(validateSyntax('invalid'));  // false
+```
+
+### `repeatChar(char, count)`
+
+Generates a string by repeating a character a specified number of times.
+
+```typescript
+function repeatChar(char: string, count: number): string
+```
+
+**Parameters:**
+- `char: string` - The character to repeat
+- `count: number` - Number of repetitions (negative values return empty string)
+
+**Returns:**
+- `string` - The repeated character string
+
+**Example:**
+```typescript
+import { repeatChar } from 'epoml';
+
+console.log(repeatChar('=', 10)); // ==========
+console.log(repeatChar('-', 5));  // -----
+```
+
+### `indentText(text, spaces)`
+
+Indents each non-empty line of text by the specified number of spaces.
+
+```typescript
+function indentText(text: string, spaces: number): string
+```
+
+**Parameters:**
+- `text: string` - The text to indent
+- `spaces: number` - Number of spaces to indent each line
+
+**Returns:**
+- `string` - The indented text
+
+**Example:**
+```typescript
+import { indentText } from 'epoml';
+
+const code = 'function hello() {\n  console.log("hi");\n}';
+const indented = indentText(code, 4);
+console.log(indented);
+/*
+    function hello() {
+      console.log("hi");
+    }
+*/
+```
+
+### `safeStringify(value)`
+
+Safely converts any value to a string representation.
+
+```typescript
+function safeStringify(value: any): string
+```
+
+**Parameters:**
+- `value: any` - The value to convert to string
+
+**Returns:**
+- `string` - String representation of the value
+
+**Example:**
+```typescript
+import { safeStringify } from 'epoml';
+
+console.log(safeStringify(null));         // ""
+console.log(safeStringify(undefined));    // ""
+console.log(safeStringify(42));           // "42"
+console.log(safeStringify({a: 1}));       // "{\"a\":1}"
+```
+
+### `wrapInCodeBlock(content, language)`
+
+Wraps content in a markdown code block with optional language specification.
+
+```typescript
+function wrapInCodeBlock(content: string, language?: string): string
+```
+
+**Parameters:**
+- `content: string` - The content to wrap
+- `language?: string` - Optional language identifier for syntax highlighting
+
+**Returns:**
+- `string` - Content wrapped in markdown code block
+
+**Example:**
+```typescript
+import { wrapInCodeBlock } from 'epoml';
+
+const code = 'console.log("Hello, World!");';
+const wrapped = wrapInCodeBlock(code, 'javascript');
+console.log(wrapped);
+/*
+```javascript
+console.log("Hello, World!");
+```
+*/
+```
+
+### `validateRequired(obj, requiredProps)`
+
+Validates that required properties are present in an object.
+
+```typescript
+function validateRequired<T>(obj: T, requiredProps: (keyof T)[]): void
+```
+
+**Parameters:**
+- `obj: T` - The object to validate
+- `requiredProps: (keyof T)[]` - Array of required property names
+
+**Throws:**
+- `Error` - If any required property is missing or null/undefined
+
+**Example:**
+```typescript
+import { validateRequired } from 'epoml';
+
+const user = { name: 'Alice', email: 'alice@example.com' };
+try {
+  validateRequired(user, ['name', 'email', 'id']); // Throws error - 'id' missing
+} catch (error) {
+  console.error(error.message); // Required property 'id' is missing
+}
+```
+
+### `mergeProps(defaults, props)`
+
+Merges default properties with provided properties.
+
+```typescript
+function mergeProps<T>(defaults: Partial<T>, props: Partial<T>): T
+```
+
+**Parameters:**
+- `defaults: Partial<T>` - Default property values
+- `props: Partial<T>` - Override property values
+
+**Returns:**
+- `T` - Merged properties object
+
+**Example:**
+```typescript
+import { mergeProps } from 'epoml';
+
+const defaults = { theme: 'light', size: 'medium', enabled: true };
+const userProps = { theme: 'dark', size: 'large' };
+const merged = mergeProps(defaults, userProps);
+console.log(merged); // { theme: 'dark', size: 'large', enabled: true }
+```
+
 ## Error Types
 
 EPOML may throw different types of errors:
