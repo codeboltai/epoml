@@ -1,1 +1,273 @@
-import { createElement } from '../core/createElement';\nimport { Component, BaseComponentProps } from '../types';\n\nexport interface ExampleOutputProps extends BaseComponentProps {\n  /** Title for the example output */\n  title?: string;\n  /** Description of the example output */\n  description?: string;\n  /** The actual output content */\n  content: string;\n  /** Format of the output */\n  format?: 'json' | 'xml' | 'text' | 'html' | 'markdown' | 'csv' | 'yaml';\n  /** Language for syntax highlighting */\n  language?: string;\n  /** Whether this is the expected output */\n  expected?: boolean;\n}\n\nexport function ExampleOutput(props: ExampleOutputProps): Component {\n  const {\n    title,\n    description,\n    content,\n    format = 'text',\n    language,\n    expected = false,\n    syntax = 'text',\n    className,\n    speaker,\n    children = []\n  } = props;\n\n  // Generate the component based on syntax\n  switch (syntax) {\n    case 'markdown':\n      return generateMarkdownExampleOutput(title, description, content, format, language, expected, children, className, speaker);\n    \n    case 'html':\n      return generateHtmlExampleOutput(title, description, content, format, language, expected, children, className, speaker);\n    \n    case 'json':\n      return generateJsonExampleOutput(title, description, content, format, language, expected, children, className, speaker);\n    \n    case 'yaml':\n      return generateYamlExampleOutput(title, description, content, format, language, expected, children, className, speaker);\n    \n    case 'xml':\n      return generateXmlExampleOutput(title, description, content, format, language, expected, children, className, speaker);\n    \n    case 'text':\n    default:\n      return generateTextExampleOutput(title, description, content, format, language, expected, children, className, speaker);\n  }\n}\n\nfunction generateMarkdownExampleOutput(\n  title: string | undefined,\n  description: string | undefined,\n  content: string,\n  format: 'json' | 'xml' | 'text' | 'html' | 'markdown' | 'csv' | 'yaml',\n  language: string | undefined,\n  expected: boolean,\n  children: (Component | string)[],\n  className?: string,\n  speaker?: string\n): Component {\n  let result = '';\n  \n  const expectedMarker = expected ? ' ✅ (Expected)' : '';\n  result += `## 📤 Example Output${title ? `: ${title}` : ''}${expectedMarker}\\n\\n`;\n  \n  if (description) {\n    result += `**Description:** ${description}\\n\\n`;\n  }\n  \n  result += `**Format:** ${format}\\n\\n`;\n  \n  if (language) {\n    result += `**Language:** ${language}\\n\\n`;\n  }\n  \n  result += '### Content\\n\\n';\n  result += `\\`\\`\\`${language || format}\\n${content}\\n\\`\\`\\`\\n\\n`;\n  \n  // Add children content\n  if (children.length > 0) {\n    const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');\n    result += childrenContent;\n  }\n  \n  return createElement('div', { className, 'data-speaker': speaker }, result);\n}\n\nfunction generateHtmlExampleOutput(\n  title: string | undefined,\n  description: string | undefined,\n  content: string,\n  format: 'json' | 'xml' | 'text' | 'html' | 'markdown' | 'csv' | 'yaml',\n  language: string | undefined,\n  expected: boolean,\n  children: (Component | string)[],\n  className?: string,\n  speaker?: string\n): Component {\n  const expectedMarker = expected ? ' ✅ (Expected)' : '';\n  \n  let html = `<div class=\"example-output${className ? ` ${className}` : ''}\"${speaker ? ` data-speaker=\"${speaker}\"` : ''}>\\n`;\n  html += `  <h2>📤 Example Output${title ? `: ${escapeHtml(title)}` : ''}${expectedMarker}</h2>\\n`;\n  \n  if (description) {\n    html += `  <p class=\"example-output-description\"><strong>Description:</strong> ${escapeHtml(description)}</p>\\n`;\n  }\n  \n  html += `  <p class=\"example-output-format\"><strong>Format:</strong> ${format}</p>\\n`;\n  \n  if (language) {\n    html += `  <p class=\"example-output-language\"><strong>Language:</strong> ${escapeHtml(language)}</p>\\n`;\n  }\n  \n  html += '  <h3>Content</h3>\\n';\n  html += `  <pre class=\"example-output-content\"><code class=\"language-${language || format}\">${escapeHtml(content)}</code></pre>\\n`;\n  \n  // Add children content\n  if (children.length > 0) {\n    html += '  <div class=\"example-output-details\">\\n';\n    const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');\n    html += `    ${childrenContent}\\n`;\n    html += '  </div>\\n';\n  }\n  \n  html += '</div>';\n  \n  return createElement('div', { 'data-speaker': speaker }, html);\n}\n\nfunction generateJsonExampleOutput(\n  title: string | undefined,\n  description: string | undefined,\n  content: string,\n  format: 'json' | 'xml' | 'text' | 'html' | 'markdown' | 'csv' | 'yaml',\n  language: string | undefined,\n  expected: boolean,\n  children: (Component | string)[],\n  className?: string,\n  speaker?: string\n): Component {\n  const exampleOutput: any = {\n    content,\n    format,\n    expected\n  };\n  \n  if (title) {\n    exampleOutput.title = title;\n  }\n  \n  if (description) {\n    exampleOutput.description = description;\n  }\n  \n  if (language) {\n    exampleOutput.language = language;\n  }\n  \n  // Add children content as a string\n  if (children.length > 0) {\n    const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');\n    exampleOutput.details = childrenContent;\n  }\n  \n  if (className) {\n    exampleOutput.className = className;\n  }\n  \n  if (speaker) {\n    exampleOutput.speaker = speaker;\n  }\n  \n  return createElement('pre', { className, 'data-speaker': speaker }, JSON.stringify(exampleOutput, null, 2));\n}\n\nfunction generateYamlExampleOutput(\n  title: string | undefined,\n  description: string | undefined,\n  content: string,\n  format: 'json' | 'xml' | 'text' | 'html' | 'markdown' | 'csv' | 'yaml',\n  language: string | undefined,\n  expected: boolean,\n  children: (Component | string)[],\n  className?: string,\n  speaker?: string\n): Component {\n  const expectedMarker = expected ? ' ✅ (Expected)' : '';\n  let yaml = `content: |\\n${content.split('\\n').map(line => `  ${line}`).join('\\n')}\\nformat: ${format}\\nexpected: ${expected}\\n`;\n  \n  if (title) {\n    yaml += `title: ${JSON.stringify(title)}\\n`;\n  }\n  \n  if (description) {\n    yaml += `description: ${JSON.stringify(description)}\\n`;\n  }\n  \n  if (language) {\n    yaml += `language: ${JSON.stringify(language)}\\n`;\n  }\n  \n  // Add children content as a string\n  if (children.length > 0) {\n    const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');\n    yaml += `details: |\\n${childrenContent.split('\\n').map(line => `  ${line}`).join('\\n')}`;\n  }\n  \n  if (className) {\n    yaml += `\\nclassName: ${JSON.stringify(className)}`;\n  }\n  \n  if (speaker) {\n    yaml += `\\nspeaker: ${JSON.stringify(speaker)}`;\n  }\n  \n  return createElement('pre', { className, 'data-speaker': speaker }, yaml);\n}\n\nfunction generateXmlExampleOutput(\n  title: string | undefined,\n  description: string | undefined,\n  content: string,\n  format: 'json' | 'xml' | 'text' | 'html' | 'markdown' | 'csv' | 'yaml',\n  language: string | undefined,\n  expected: boolean,\n  children: (Component | string)[],\n  className?: string,\n  speaker?: string\n): Component {\n  let xml = `<exampleOutput content=\"${escapeXmlAttr(content)}\" format=\"${format}\" expected=\"${expected}\"`;\n  \n  if (title) {\n    xml += ` title=\"${escapeXmlAttr(title)}\"`;\n  }\n  \n  if (language) {\n    xml += ` language=\"${escapeXmlAttr(language)}\"`;\n  }\n  \n  if (className) {\n    xml += ` class=\"${className}\"`;\n  }\n  \n  if (speaker) {\n    xml += ` data-speaker=\"${speaker}\"`;\n  }\n  \n  xml += '>\\n';\n  \n  if (description) {\n    xml += `  <description>${escapeXml(description)}</description>\\n`;\n  }\n  \n  // Add children content\n  if (children.length > 0) {\n    const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');\n    xml += `  <details>${escapeXml(childrenContent)}</details>\\n`;\n  }\n  \n  xml += '</exampleOutput>';\n  \n  return createElement('pre', { className, 'data-speaker': speaker }, xml);\n}\n\nfunction generateTextExampleOutput(\n  title: string | undefined,\n  description: string | undefined,\n  content: string,\n  format: 'json' | 'xml' | 'text' | 'html' | 'markdown' | 'csv' | 'yaml',\n  language: string | undefined,\n  expected: boolean,\n  children: (Component | string)[],\n  className?: string,\n  speaker?: string\n): Component {\n  const expectedMarker = expected ? ' ✅ (Expected)' : '';\n  let result = `EXAMPLE OUTPUT: 📤${title ? ` ${title}` : ''}${expectedMarker}\\n`;\n  result += '='.repeat(Math.max(15, (title?.length || 0) + 15)) + '\\n\\n';\n  \n  if (description) {\n    result += `Description: ${description}\\n\\n`;\n  }\n  \n  result += `Format: ${format}\\n\\n`;\n  \n  if (language) {\n    result += `Language: ${language}\\n\\n`;\n  }\n  \n  result += 'Content:\\n';\n  result += '-------\\n';\n  result += `${content}\\n\\n`;\n  \n  // Add children content\n  if (children.length > 0) {\n    result += 'Details:\\n';\n    result += '-------\\n';\n    const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');\n    result += childrenContent;\n  }\n  \n  return createElement('div', { className, 'data-speaker': speaker }, result);\n}\n\nfunction escapeHtml(text: string): string {\n  return text\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;')\n    .replace(/'/g, '&#39;');\n}\n\nfunction escapeXml(text: string): string {\n  return text\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;')\n    .replace(/'/g, '&#39;');\n}\n\nfunction escapeXmlAttr(text: string): string {\n  return text\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;')\n    .replace(/'/g, '&apos;');\n}
+import { createElement } from '../core/createElement';
+import { Component, BaseComponentProps } from '../types';
+
+export interface ExampleOutputProps extends BaseComponentProps {
+  /** Label for the example output */
+  label?: string;
+  /** Whether to render as inline */
+  inline?: boolean;
+  /** Output format/type */
+  format?: string;
+}
+
+export function ExampleOutput(props: ExampleOutputProps): Component {
+  const {
+    label,
+    inline = false,
+    format,
+    syntax = 'markdown',
+    className,
+    speaker,
+    children = []
+  } = props;
+
+  // Generate the component based on syntax
+  switch (syntax) {
+    case 'markdown':
+      return generateMarkdownExampleOutput(label, inline, format, children, className, speaker);
+    
+    case 'html':
+      return generateHtmlExampleOutput(label, inline, format, children, className, speaker);
+    
+    case 'json':
+      return generateJsonExampleOutput(label, inline, format, children, className, speaker);
+    
+    case 'yaml':
+      return generateYamlExampleOutput(label, inline, format, children, className, speaker);
+    
+    case 'xml':
+      return generateXmlExampleOutput(label, inline, format, children, className, speaker);
+    
+    case 'text':
+    default:
+      return generateTextExampleOutput(label, inline, format, children, className, speaker);
+  }
+}
+
+function generateMarkdownExampleOutput(
+  label: string | undefined,
+  inline: boolean,
+  format: string | undefined,
+  children: (Component | string)[],
+  className?: string,
+  speaker?: string
+): Component {
+  let result = '';
+  
+  const content = children.map(child => typeof child === 'string' ? child : '').join('');
+  
+  if (inline) {
+    if (label) {
+      result += `**${label}:** `;
+    }
+    result += `\`${content}\``;
+  } else {
+    if (label) {
+      result += `**${label}**\n\n`;
+    } else {
+      result += '**Output:**\n\n';
+    }
+    
+    if (format) {
+      result += `\`\`\`${format}\n${content}\n\`\`\``;
+    } else {
+      result += `\`\`\`\n${content}\n\`\`\``;
+    }
+  }
+  
+  return createElement('div', { className, 'data-speaker': speaker }, result);
+}
+
+function generateHtmlExampleOutput(
+  label: string | undefined,
+  inline: boolean,
+  format: string | undefined,
+  children: (Component | string)[],
+  className?: string,
+  speaker?: string
+): Component {
+  let html = '';
+  
+  const content = children.map(child => typeof child === 'string' ? child : '').join('');
+  
+  if (inline) {
+    html += '<span class="example-output"';
+    if (className) {
+      html += ` class="${className}"`;
+    }
+    html += '>';
+    
+    if (label) {
+      html += `<strong>${escapeHtml(label)}:</strong> `;
+    }
+    html += `<code>${escapeHtml(content)}</code>`;
+    html += '</span>';
+  } else {
+    html += '<div class="example-output"';
+    if (className) {
+      html += ` class="${className}"`;
+    }
+    html += '>\n';
+    
+    if (label) {
+      html += `  <h4>${escapeHtml(label)}</h4>\n`;
+    } else {
+      html += '  <h4>Output</h4>\n';
+    }
+    
+    html += `  <pre><code`;
+    if (format) {
+      html += ` class="language-${format}"`;
+    }
+    html += `>${escapeHtml(content)}</code></pre>\n`;
+    html += '</div>';
+  }
+  
+  return createElement('div', { 'data-speaker': speaker }, html);
+}
+
+function generateJsonExampleOutput(
+  label: string | undefined,
+  inline: boolean,
+  format: string | undefined,
+  children: (Component | string)[],
+  className?: string,
+  speaker?: string
+): Component {
+  const exampleOutput: any = {};
+  
+  if (label) {
+    exampleOutput.label = label;
+  }
+  
+  exampleOutput.inline = inline;
+  
+  if (format) {
+    exampleOutput.format = format;
+  }
+  
+  const content = children.map(child => typeof child === 'string' ? child : '').join('');
+  if (content) {
+    exampleOutput.content = content;
+  }
+  
+  return createElement('pre', { className, 'data-speaker': speaker }, JSON.stringify(exampleOutput, null, 2));
+}
+
+function generateYamlExampleOutput(
+  label: string | undefined,
+  inline: boolean,
+  format: string | undefined,
+  children: (Component | string)[],
+  className?: string,
+  speaker?: string
+): Component {
+  let yaml = '';
+  
+  if (label) {
+    yaml += `label: ${JSON.stringify(label)}\n`;
+  }
+  
+  yaml += `inline: ${inline}\n`;
+  
+  if (format) {
+    yaml += `format: ${JSON.stringify(format)}\n`;
+  }
+  
+  const content = children.map(child => typeof child === 'string' ? child : '').join('');
+  if (content) {
+    yaml += `content: |\n${content.split('\n').map(line => `  ${line}`).join('\n')}`;
+  }
+  
+  return createElement('pre', { className, 'data-speaker': speaker }, yaml);
+}
+
+function generateXmlExampleOutput(
+  label: string | undefined,
+  inline: boolean,
+  format: string | undefined,
+  children: (Component | string)[],
+  className?: string,
+  speaker?: string
+): Component {
+  let xml = '<exampleOutput';
+  
+  if (className) {
+    xml += ` class="${className}"`;
+  }
+  
+  if (speaker) {
+    xml += ` data-speaker="${speaker}"`;
+  }
+  
+  xml += ` inline="${inline}"`;
+  
+  if (format) {
+    xml += ` format="${format}"`;
+  }
+  
+  xml += '>\n';
+  
+  if (label) {
+    xml += `  <label>${escapeXml(label)}</label>\n`;
+  }
+  
+  const content = children.map(child => typeof child === 'string' ? child : '').join('');
+  if (content) {
+    xml += `  <content>${escapeXml(content)}</content>\n`;
+  }
+  
+  xml += '</exampleOutput>';
+  
+  return createElement('pre', { className, 'data-speaker': speaker }, xml);
+}
+
+function generateTextExampleOutput(
+  label: string | undefined,
+  inline: boolean,
+  format: string | undefined,
+  children: (Component | string)[],
+  className?: string,
+  speaker?: string
+): Component {
+  let result = '';
+  
+  const content = children.map(child => typeof child === 'string' ? child : '').join('');
+  
+  if (inline) {
+    if (label) {
+      result += `${label}: `;
+    }
+    result += `"${content}"`;
+  } else {
+    const outputLabel = label || 'OUTPUT';
+    result += `${outputLabel}:\n`;
+    result += '-'.repeat(outputLabel.length + 1) + '\n';
+    
+    if (format) {
+      result += `[${format}]\n`;
+    }
+    
+    result += content;
+  }
+  
+  return createElement('div', { className, 'data-speaker': speaker }, result);
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function escapeXml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
