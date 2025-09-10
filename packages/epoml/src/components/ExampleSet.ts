@@ -1,5 +1,6 @@
 import { createElement } from '../core/createElement';
 import { Component, BaseComponentProps } from '../types';
+import { escapeHtml, escapeXml, processTemplateVars } from '../utils';
 
 export interface ExampleSetProps extends BaseComponentProps {
   /** Title for the example set */
@@ -10,6 +11,8 @@ export interface ExampleSetProps extends BaseComponentProps {
   inline?: boolean;
   /** Number of examples to show (for truncation) */
   limit?: number;
+  /** Template variables for dynamic content */
+  templateVars?: Record<string, any>;
 }
 
 export function ExampleSet(props: ExampleSetProps): Component {
@@ -18,11 +21,16 @@ export function ExampleSet(props: ExampleSetProps): Component {
     description,
     inline = false,
     limit,
+    templateVars = {},
     syntax = 'markdown',
     className,
     speaker,
     children = []
   } = props;
+
+  // Process template variables
+  const processedTitle = title ? processTemplateVars(title, templateVars) : title;
+  const processedDescription = description ? processTemplateVars(description, templateVars) : description;
 
   // Apply limit if specified
   const limitedChildren = limit ? children.slice(0, limit) : children;
@@ -30,23 +38,23 @@ export function ExampleSet(props: ExampleSetProps): Component {
   // Generate the component based on syntax
   switch (syntax) {
     case 'markdown':
-      return generateMarkdownExampleSet(title, description, inline, limitedChildren, className, speaker);
+      return generateMarkdownExampleSet(processedTitle, processedDescription, inline, limitedChildren, className, speaker);
     
     case 'html':
-      return generateHtmlExampleSet(title, description, inline, limitedChildren, className, speaker);
+      return generateHtmlExampleSet(processedTitle, processedDescription, inline, limitedChildren, className, speaker);
     
     case 'json':
-      return generateJsonExampleSet(title, description, inline, limitedChildren, className, speaker);
+      return generateJsonExampleSet(processedTitle, processedDescription, inline, limitedChildren, className, speaker);
     
     case 'yaml':
-      return generateYamlExampleSet(title, description, inline, limitedChildren, className, speaker);
+      return generateYamlExampleSet(processedTitle, processedDescription, inline, limitedChildren, className, speaker);
     
     case 'xml':
-      return generateXmlExampleSet(title, description, inline, limitedChildren, className, speaker);
+      return generateXmlExampleSet(processedTitle, processedDescription, inline, limitedChildren, className, speaker);
     
     case 'text':
     default:
-      return generateTextExampleSet(title, description, inline, limitedChildren, className, speaker);
+      return generateTextExampleSet(processedTitle, processedDescription, inline, limitedChildren, className, speaker);
   }
 }
 
@@ -210,11 +218,12 @@ function generateXmlExampleSet(
     xml += ` data-speaker="${speaker}"`;
   }
   
-  xml += ` inline="${inline}">\n`;
-  
   if (title) {
-    xml += `  <title>${escapeXml(title)}</title>\n`;
+    xml += ` title="${escapeXml(title)}"`;
   }
+  
+  xml += ` inline="${inline}"`;
+  xml += '>\n';
   
   if (description) {
     xml += `  <description>${escapeXml(description)}</description>\n`;
@@ -246,7 +255,10 @@ function generateTextExampleSet(
   
   if (title) {
     result += `EXAMPLE SET: ${title}\n`;
-    result += '='.repeat(Math.max(13, title.length + 13)) + '\n\n';
+    result += '='.repeat(Math.max(12, title.length + 12)) + '\n\n';
+  } else {
+    result += 'EXAMPLE SET\n';
+    result += '===========\n\n';
   }
   
   if (description) {
@@ -255,10 +267,10 @@ function generateTextExampleSet(
   
   if (children.length > 0) {
     if (inline) {
-      result += `Examples: ${children.map(child => typeof child === 'string' ? child : '').join(', ')}`;
+      result += 'Examples: ' + children.map(child => typeof child === 'string' ? child : '').join(', ');
     } else {
       result += 'Examples:\n';
-      result += '---------\n';
+      result += '--------\n\n';
       children.forEach((child, index) => {
         const content = typeof child === 'string' ? child : '';
         result += `${index + 1}. ${content}\n`;
@@ -267,22 +279,4 @@ function generateTextExampleSet(
   }
   
   return createElement('div', { className, 'data-speaker': speaker }, result);
-}
-
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function escapeXml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
 }

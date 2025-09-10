@@ -1,5 +1,4 @@
 import { createElement } from '../core/createElement';
-import { createElement } from '../core/createElement';
 import { Component, BaseComponentProps } from '../types';
 import { escapeHtml, escapeXml, processTemplateVars, repeatChar } from '../utils';
 

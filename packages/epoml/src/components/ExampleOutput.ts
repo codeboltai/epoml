@@ -1,5 +1,6 @@
 import { createElement } from '../core/createElement';
 import { Component, BaseComponentProps } from '../types';
+import { escapeHtml, escapeXml, processTemplateVars } from '../utils';
 
 export interface ExampleOutputProps extends BaseComponentProps {
   /** Label for the example output */
@@ -8,6 +9,8 @@ export interface ExampleOutputProps extends BaseComponentProps {
   inline?: boolean;
   /** Output format/type */
   format?: string;
+  /** Template variables for dynamic content */
+  templateVars?: Record<string, any>;
 }
 
 export function ExampleOutput(props: ExampleOutputProps): Component {
@@ -15,32 +18,36 @@ export function ExampleOutput(props: ExampleOutputProps): Component {
     label,
     inline = false,
     format,
+    templateVars = {},
     syntax = 'markdown',
     className,
     speaker,
     children = []
   } = props;
 
+  // Process template variables
+  const processedLabel = label ? processTemplateVars(label, templateVars) : label;
+
   // Generate the component based on syntax
   switch (syntax) {
     case 'markdown':
-      return generateMarkdownExampleOutput(label, inline, format, children, className, speaker);
+      return generateMarkdownExampleOutput(processedLabel, inline, format, children, className, speaker);
     
     case 'html':
-      return generateHtmlExampleOutput(label, inline, format, children, className, speaker);
+      return generateHtmlExampleOutput(processedLabel, inline, format, children, className, speaker);
     
     case 'json':
-      return generateJsonExampleOutput(label, inline, format, children, className, speaker);
+      return generateJsonExampleOutput(processedLabel, inline, format, children, className, speaker);
     
     case 'yaml':
-      return generateYamlExampleOutput(label, inline, format, children, className, speaker);
+      return generateYamlExampleOutput(processedLabel, inline, format, children, className, speaker);
     
     case 'xml':
-      return generateXmlExampleOutput(label, inline, format, children, className, speaker);
+      return generateXmlExampleOutput(processedLabel, inline, format, children, className, speaker);
     
     case 'text':
     default:
-      return generateTextExampleOutput(label, inline, format, children, className, speaker);
+      return generateTextExampleOutput(processedLabel, inline, format, children, className, speaker);
   }
 }
 
@@ -60,7 +67,7 @@ function generateMarkdownExampleOutput(
     if (label) {
       result += `**${label}:** `;
     }
-    result += `\`${content}\``;
+    result += '`' + content + '`';
   } else {
     if (label) {
       result += `**${label}**\n\n`;
@@ -69,9 +76,9 @@ function generateMarkdownExampleOutput(
     }
     
     if (format) {
-      result += `\`\`\`${format}\n${content}\n\`\`\``;
+      result += '```' + format + '\n' + content + '\n```';
     } else {
-      result += `\`\`\`\n${content}\n\`\`\``;
+      result += '```\n' + content + '\n```';
     }
   }
   
@@ -200,21 +207,20 @@ function generateXmlExampleOutput(
     xml += ` data-speaker="${speaker}"`;
   }
   
-  xml += ` inline="${inline}"`;
+  if (label) {
+    xml += ` label="${escapeXml(label)}"`;
+  }
   
   if (format) {
     xml += ` format="${format}"`;
   }
   
-  xml += '>\n';
-  
-  if (label) {
-    xml += `  <label>${escapeXml(label)}</label>\n`;
-  }
+  xml += ` inline="${inline}"`;
+  xml += '>';
   
   const content = children.map(child => typeof child === 'string' ? child : '').join('');
   if (content) {
-    xml += `  <content>${escapeXml(content)}</content>\n`;
+    xml += `\n  <content>${escapeXml(content)}</content>\n`;
   }
   
   xml += '</exampleOutput>';
@@ -238,36 +244,24 @@ function generateTextExampleOutput(
     if (label) {
       result += `${label}: `;
     }
-    result += `"${content}"`;
+    result += content;
   } else {
-    const outputLabel = label || 'OUTPUT';
-    result += `${outputLabel}:\n`;
-    result += '-'.repeat(outputLabel.length + 1) + '\n';
-    
-    if (format) {
-      result += `[${format}]\n`;
+    if (label) {
+      result += `OUTPUT: ${label}\n`;
+      result += '='.repeat(Math.max(7, label.length + 7)) + '\n\n';
+    } else {
+      result += 'OUTPUT\n';
+      result += '======\n\n';
     }
     
+    if (format) {
+      result += `Format: ${format}\n\n`;
+    }
+    
+    result += 'Content:\n';
+    result += '-------\n';
     result += content;
   }
   
   return createElement('div', { className, 'data-speaker': speaker }, result);
-}
-
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function escapeXml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
 }
