@@ -1,11 +1,13 @@
 import { epomlparse } from 'epoml';
 
 async function exampleUsage() {
-  const template1 = `<p>This text contains <Bold>emphasized words</Bold> within it.</p>`;
-  const result1 = await epomlparse(template1, { name: "hi" });
-  console.log('Template:', template1);
-  console.log('Variables:', JSON.stringify({ name: "hi" }));
-  console.log('Result:', result1);
+   // Test with your requested function using variables
+  console.log('Testing with your function using variables:');
+  const jsCode = 'function greet(name) { return `Hello, ${name}!`; }';
+  const functionTemplate = `<Code inline={false} lang="javascript">{code}</Code>`;
+  const functionResult = await epomlparse(functionTemplate, { code: jsCode });
+  console.log('Function Template:', functionTemplate);
+  console.log('Function Result:', functionResult);
   console.log('---');
 }
 

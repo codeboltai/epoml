@@ -1,19 +1,38 @@
 # Code Component
 
-The Code component displays code blocks and inline code with syntax highlighting support across multiple output formats.
+The Code component displays code blocks and inline code with syntax highlighting support across multiple output formats. It provides robust template variable support for dynamic code injection.
 
 ## Usage
+
+### Basic Examples
 
 ```jsx
 <!-- Inline code -->
 <Code>console.log("Hello")</Code>
 
-<!-- Code block -->
-<Code inline={false} lang="javascript">
-  function greet(name) {
-    console.log(`Hello, ${name}!`);
-  }
-</Code>
+<!-- Simple code block -->
+<Code inline={false} lang="javascript">console.log("Hello World")</Code>
+```
+
+### Using Template Variables (Recommended for Complex Code)
+
+For JavaScript code blocks containing functions, statements, or complex syntax, use template variables to avoid JSX parsing conflicts:
+
+```jsx
+<!-- Template with variable -->
+<Code inline={false} lang="javascript">{code}</Code>
+```
+
+**Usage with epomlparse:**
+```typescript
+const template = `<Code inline={false} lang="javascript">{code}</Code>`;
+const jsCode = 'function greet(name) { return `Hello, ${name}!`; }';
+const result = await epomlparse(template, { code: jsCode });
+```
+
+**Output:**
+```javascript
+function greet(name) { return `Hello, ${name}!`; }
 ```
 
 ## Props
@@ -44,14 +63,22 @@ The Code component displays code blocks and inline code with syntax highlighting
 ```
 **Output:** `` `console.log("Hello")` ``
 
-#### Code Block
+#### Code Block with Template Variables
 ```jsx
-<Code inline={false} lang="javascript">
-  function greet(name) {
-    console.log(`Hello, ${name}!`);
-  }
-</Code>
+<Code inline={false} lang="javascript">{functionCode}</Code>
 ```
+
+**Usage:**
+```typescript
+const template = `<Code inline={false} lang="javascript">{functionCode}</Code>`;
+const variables = {
+  functionCode: `function greet(name) {
+  console.log(\`Hello, \${name}!\`);
+}`
+};
+const result = await epomlparse(template, variables);
+```
+
 **Output:**
 ````markdown
 ```javascript
@@ -186,31 +213,35 @@ language: "python"
 </Code>
 ```
 
-### With Variables
-```jsx
-<p>
-  Here's how to use the <Code>{functionName}</Code> function:
-</p>
+### Real-world Example: JavaScript Functions
 
-<Code inline={false} lang={language}>
-  {codeExample}
-</Code>
+**Template:**
+```jsx
+<div>
+  <p>Here is a <Bold>JavaScript function</Bold>:</p>
+  <Code inline={false} lang="javascript">{code}</Code>
+</div>
 ```
 
 **Usage:**
 ```typescript
 const template = `
-  <p>Here's how to use the <Code>{functionName}</Code> function:</p>
-  <Code inline={false} lang={language}>{codeExample}</Code>
+<div>
+  <p>Here is a <Bold>JavaScript function</Bold>:</p>
+  <Code inline={false} lang="javascript">{code}</Code>
+</div>
 `;
 
-const result = await epomlparse(template, {
-  functionName: "calculateSum",
-  language: "javascript",
-  codeExample: `function calculateSum(a, b) {
-  return a + b;
-}`
-});
+const jsCode = 'function greet(name) { return `Hello, ${name}!`; }';
+const result = await epomlparse(template, { code: jsCode });
+```
+
+**Output:**
+```
+Here is a **JavaScript function**:
+```javascript
+function greet(name) { return `Hello, ${name}!`; }
+```
 ```
 
 ### With Styling and Metadata
@@ -248,12 +279,23 @@ const result = await epomlparse(template, {
 
 ## Best Practices
 
-1. **Language Specification**: Always specify the `lang` prop for better syntax highlighting
-2. **Inline vs Block**: Use inline for short snippets, block for multi-line code
-3. **Whitespace**: Use `whiteSpace="pre"` (default) to preserve code formatting
-4. **Consistent Syntax**: Choose one output format and stick with it
-5. **Escaping**: Let EPOML handle escaping - don't manually escape code content
-6. **Readability**: Add blank lines around code blocks for better readability
+1. **Use Template Variables for Complex Code**: For JavaScript code blocks containing functions, semicolons, or complex syntax, use template variables to avoid JSX parsing conflicts:
+   ```jsx
+   // ✅ Recommended - Using template variables
+   <Code inline={false} lang="javascript">{code}</Code>
+   
+   // ❌ Avoid - Direct code in JSX (causes parsing errors)
+   <Code inline={false} lang="javascript">
+     function greet(name) { return 'Hello ' + name; }
+   </Code>
+   ```
+
+2. **Language Specification**: Always specify the `lang` prop for better syntax highlighting
+3. **Inline vs Block**: Use inline for short snippets, block for multi-line code
+4. **Whitespace**: Use `whiteSpace="pre"` (default) to preserve code formatting
+5. **Consistent Syntax**: Choose one output format and stick with it
+6. **Escaping**: Let EPOML handle escaping - don't manually escape code content
+7. **Readability**: Add blank lines around code blocks for better readability
 
 ## Common Patterns
 
@@ -390,6 +432,53 @@ The `lang` prop accepts any programming language identifier. Common examples:
     return fibonacci(n - 1) + fibonacci(n - 2);
   }
 </Code>
+```
+
+## Troubleshooting
+
+### JSX Parsing Errors
+
+If you encounter syntax errors like "Expected ';', '}' or <eof>" when using the Code component, it's likely due to JSX parsing conflicts. Here's how to resolve them:
+
+**❌ Problem:** Direct JavaScript code in JSX
+```jsx
+<!-- This will cause parsing errors -->
+<Code inline={false} lang="javascript">
+  function greet(name) {
+    console.log('Hello, ' + name + '!');
+  }
+</Code>
+```
+
+**✅ Solution:** Use template variables
+```jsx
+<!-- Template -->
+<Code inline={false} lang="javascript">{code}</Code>
+```
+```typescript
+// JavaScript
+const jsCode = `function greet(name) {
+  console.log('Hello, ' + name + '!');
+}`;
+const result = await epomlparse(template, { code: jsCode });
+```
+
+**Why this happens:** The SWC JSX parser tries to parse content inside JSX tags as JSX syntax, but JavaScript keywords like `function`, `return`, and semicolons confuse the parser.
+
+### Container Elements
+
+When using multiple JSX elements, wrap them in a container to prevent parsing issues:
+
+```jsx
+<!-- ✅ Good: Wrapped in container -->
+<div>
+  <p>This text contains <Bold>emphasized words</Bold> within it.</p>
+  <Code inline={false} lang="javascript">{code}</Code>
+</div>
+
+<!-- ❌ Avoid: Multiple top-level elements -->
+<p>This text contains <Bold>emphasized words</Bold> within it.</p>
+<Code inline={false} lang="javascript">{code}</Code>
 ```
 
 ## Related Components
