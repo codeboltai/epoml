@@ -44,6 +44,7 @@ import {
   MessageContext,
   ToolRequest,
   ToolResponse,
+  Loop,
   type AudioProps,
   type BoldProps,
   type CaptionedParagraphProps,
@@ -83,7 +84,8 @@ import {
   type SystemMessageProps,
   type MessageContextProps,
   type ToolRequestProps,
-  type ToolResponseProps
+  type ToolResponseProps,
+  type LoopProps
 } from './components';
 import { epomlparse } from './core/epomlparse';
 import { type TemplateVariables, type Component } from './types';
@@ -135,6 +137,7 @@ export {
   MessageContext,
   ToolRequest,
   ToolResponse,
+  Loop,
   epomlparse, 
   registerComponent, 
   unregisterComponent, 
@@ -180,5 +183,6 @@ export {
   type MessageContextProps,
   type ToolRequestProps,
   type ToolResponseProps,
+  type LoopProps,
   type TemplateVariables
 };

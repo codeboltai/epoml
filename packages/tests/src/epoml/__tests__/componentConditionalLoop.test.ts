@@ -1,7 +1,7 @@
-import { render } from '../core/renderer';
-import { Paragraph } from '../components/Paragraph';
-import { ListItem } from '../components/ListItem';
-import { Example } from '../components/Example';
+import { render } from 'epoml/core/renderer';
+import { Paragraph } from 'epoml/components/Paragraph';
+import { ListItem } from 'epoml/components/ListItem';
+import { Example } from 'epoml/components/Example';
 
 describe('Component Conditional and Loop Logic', () => {
   test('should render paragraph with conditional logic (true)', async () => {

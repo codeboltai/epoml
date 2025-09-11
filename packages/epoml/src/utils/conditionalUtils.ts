@@ -83,9 +83,42 @@ export function evaluateArrayExpression(expression: string, context: Record<stri
     }
     
     // Handle variable references like 'items' or 'user.list'
+    // First, try to resolve nested object properties
+    if (expression.includes('.')) {
+      const parts = expression.split('.');
+      let value = context[parts[0]];
+      
+      // Navigate through the object properties
+      for (let i = 1; i < parts.length; i++) {
+        if (value && typeof value === 'object' && parts[i] in value) {
+          value = value[parts[i]];
+        } else {
+          // Property not found, fall back to function evaluation
+          break;
+        }
+      }
+      
+      // If we successfully resolved the nested property and it's an array, return it
+      if (Array.isArray(value)) {
+        return value;
+      }
+    }
+    
+    // Handle simple variable references like 'items'
+    if (context[expression] !== undefined && Array.isArray(context[expression])) {
+      return context[expression];
+    }
+    
+    // Fall back to function evaluation for complex expressions
     const funcBody = `return (${expression});`;
-    const funcArgs = Object.keys(context);
-    const funcValues = Object.values(context);
+    // Combine context variables with global variables for evaluation
+    const combinedContext = { ...context };
+    // Add global variables that might be needed
+    if (typeof (global as any) !== 'undefined' && (global as any) !== null) {
+      Object.assign(combinedContext, global as any);
+    }
+    const funcArgs = Object.keys(combinedContext);
+    const funcValues = Object.values(combinedContext);
     const func = new Function(...funcArgs, funcBody);
     const result = func(...funcValues);
     return Array.isArray(result) ? result : [];

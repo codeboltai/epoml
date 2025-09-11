@@ -40,12 +40,45 @@ export function escapeXmlAttr(text: string): string {
 
 /**
  * Processes template variables in text content
- * Replaces {variableName} patterns with actual values from context
+ * Replaces {variableName} and {{variableName}} patterns with actual values from context
  */
 export function processTemplateVars(text: string, context: Record<string, any> = {}): string {
-  return text.replace(/\{(\w+)\}/g, (match, varName) => {
+  // Handle double curly braces {{variableName}}
+  text = text.replace(/\{\{([^}]+)\}\}/g, (match, varName) => {
+    const trimmedVarName = varName.trim();
+    // Handle special loop variables like loop.index
+    if (trimmedVarName.startsWith('loop.')) {
+      const loopProp = trimmedVarName.substring(5); // Remove 'loop.' prefix
+      return context.loop && context.loop[loopProp] !== undefined ? String(context.loop[loopProp]) : match;
+    }
+    
+    // Handle object property access like person.name
+    if (trimmedVarName.includes('.')) {
+      const parts = trimmedVarName.split('.');
+      let value = context[parts[0]];
+      
+      // Navigate through the object properties
+      for (let i = 1; i < parts.length; i++) {
+        if (value && typeof value === 'object' && parts[i] in value) {
+          value = value[parts[i]];
+        } else {
+          // Property not found, return the original match
+          return match;
+        }
+      }
+      
+      return value !== undefined ? String(value) : match;
+    }
+    
+    return context[trimmedVarName] !== undefined ? String(context[trimmedVarName]) : match;
+  });
+  
+  // Handle single curly braces {variableName}
+  text = text.replace(/\{(\w+)\}/g, (match, varName) => {
     return context[varName] !== undefined ? String(context[varName]) : match;
   });
+  
+  return text;
 }
 
 /**

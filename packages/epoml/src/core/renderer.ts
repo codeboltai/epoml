@@ -1,6 +1,3 @@
-import { Component } from '../types';
-import { Fragment } from './Fragment';
-
 /**
  * Render a component tree to a string
  * @param component The component to render
@@ -8,14 +5,99 @@ import { Fragment } from './Fragment';
  */
 export async function render(component: Component | string): Promise<string> {
   if (typeof component === 'string') {
-    return component;
+    // Process template variables in string content
+    return processTemplateVars(component, evaluationContext);
   }
 
   if (Array.isArray(component)) {
     return (await Promise.all(component.map(render))).join('');
   }
 
+  // Use the context from the component if it exists, otherwise use the global evaluation context
+  const renderContext = component.props?.context || evaluationContext;
+
+  // Handle conditional rendering with 'if' attribute
+  if (component.props?.if !== undefined) {
+    // If the if attribute is a boolean, use it directly
+    if (typeof component.props.if === 'boolean') {
+      if (!component.props.if) {
+        return ''; // Don't render if condition is false
+      }
+    } else if (typeof component.props.if === 'string') {
+      // If the if attribute is a string, evaluate it as an expression
+      if (!evaluateCondition(component.props.if, renderContext)) {
+        return ''; // Don't render if condition is false
+      }
+    }
+  }
+
+  // Handle loop rendering with 'for' attribute
+  if (component.props?.for !== undefined) {
+    // Process the for attribute with template variables
+    const processedFor = typeof component.props.for === 'string' 
+      ? processTemplateVars(component.props.for, renderContext)
+      : component.props.for;
+    
+    // Create a Loop component and render it
+    const loopResult = await Loop({
+      for: processedFor,
+      context: renderContext,
+      children: component.children
+    });
+    return render(loopResult);
+  }
+
+  // Handle function components directly
   if (typeof component.type === 'function') {
+    // Special handling for built-in components
+    if (component.type === Example) {
+      // Process component props with the current context
+      const processedExampleProps: Record<string, any> = {};
+      for (const [key, value] of Object.entries(component.props || {})) {
+        if (typeof value === 'string') {
+          // Process string props with template variables
+          processedExampleProps[key] = processTemplateVars(value, renderContext);
+        } else {
+          processedExampleProps[key] = value;
+        }
+      }
+      
+      // Render using the Example component function
+      const exampleResult = await Example({ ...processedExampleProps, children: component.children });
+      return render(exampleResult);
+    }
+    
+    if (component.type === Loop) {
+      // Process component props with the current context
+      const processedLoopProps: Record<string, any> = {};
+      for (const [key, value] of Object.entries(component.props || {})) {
+        if (typeof value === 'string') {
+          // Process string props with template variables
+          processedLoopProps[key] = processTemplateVars(value, renderContext);
+        } else {
+          processedLoopProps[key] = value;
+        }
+      }
+      
+      // Pass the current evaluation context to the Loop component
+      processedLoopProps.context = renderContext;
+      
+      // Ensure the 'for' property is provided
+      if (!processedLoopProps.for) {
+        // Use console directly and suppress TypeScript error
+        console.warn('Loop component missing required "for" property');
+        return '';
+      }
+      
+      // Render using the Loop component function
+      const loopResult = await Loop({ 
+        for: processedLoopProps.for,
+        context: processedLoopProps.context,
+        children: component.children 
+      });
+      return render(loopResult);
+    }
+    
     const result = await component.type({ ...component.props, children: component.children });
     if (typeof result === 'string') {
       return result;
@@ -23,6 +105,7 @@ export async function render(component: Component | string): Promise<string> {
     return render(result);
   }
 
+  // Handle built-in components
   switch (component.type) {
     // Text formatting components
     case 'italic':
@@ -52,7 +135,8 @@ export async function render(component: Component | string): Promise<string> {
     
     case 'list':
     case 'ul':
-      return `${(await Promise.all(component.children.map(render))).join('')}`;
+      const listContent = (await Promise.all(component.children.map(render))).join('');
+      return `${listContent}`;
     
     case 'listitem':
     case 'item':
@@ -93,15 +177,15 @@ export async function render(component: Component | string): Promise<string> {
     // Utility components
     case 'toolrequest':
     case 'tool-request':
-      const toolName = component.props?.tool || 'Unknown Tool';
+      const toolRequestName = component.props?.tool || 'Unknown Tool';
       const requestContent = (await Promise.all(component.children.map(render))).join('');
-      return `🔧 Tool Request (${toolName}): ${requestContent}\n`;
+      return `🔧 Tool Request (${toolRequestName}): ${requestContent}\n`;
     
     case 'toolresponse':
     case 'tool-response':
-      const responseTool = component.props?.tool || 'Unknown Tool';
+      const toolResponseName = component.props?.tool || 'Unknown Tool';
       const responseContent = (await Promise.all(component.children.map(render))).join('');
-      return `✅ Tool Response (${responseTool}): ${responseContent}\n`;
+      return `✅ Tool Response (${toolResponseName}): ${responseContent}\n`;
     
     case 'webpage':
       const url = component.props?.url || '';
@@ -126,10 +210,44 @@ export async function render(component: Component | string): Promise<string> {
     
     // Custom components
     case 'example':
-      const exampleContent = (await Promise.all(component.children.map(render))).join('');
-      return `${exampleContent}\n`;
+      // For custom components, we need to import and call the component function
+      // with the processed props
+      const { Example } = await import('../components/Example');
+      // Process component props with the current context
+      const processedExampleProps: Record<string, any> = {};
+      for (const [key, value] of Object.entries(component.props || {})) {
+        if (typeof value === 'string') {
+          // Process string props with template variables
+          processedExampleProps[key] = processTemplateVars(value, renderContext);
+        } else {
+          processedExampleProps[key] = value;
+        }
+      }
+      
+      // Render using the Example component function
+      const exampleResult = await Example({ ...processedExampleProps, children: component.children });
+      return render(exampleResult);
     
     default:
+      // Check if it's a registered custom component
+      const customComponent = getComponent(component.type as string);
+      if (customComponent) {
+        // Process component props with the current context
+        const processedProps: Record<string, any> = {};
+        for (const [key, value] of Object.entries(component.props || {})) {
+          if (typeof value === 'string') {
+            // Process string props with template variables
+            processedProps[key] = processTemplateVars(value, renderContext);
+          } else {
+            processedProps[key] = value;
+          }
+        }
+        
+        // Render using the custom component function
+        const customResult = await customComponent({ ...processedProps, children: component.children });
+        return render(customResult);
+      }
+      
       if (component.children) {
         return `${(await Promise.all(component.children.map(render))).join('')}`;
       }

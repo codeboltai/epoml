@@ -1,5 +1,5 @@
 import * as swc from '@swc/core';
-import { render } from './renderer';
+import { render, setEvaluationContext } from './renderer';
 import { createElement } from './createElement';
 import { Fragment } from './Fragment';
 import { registerComponent, unregisterComponent, getComponent, clearComponents } from './componentRegistry';
@@ -44,7 +44,8 @@ import {
   SystemMessage,
   MessageContext,
   ToolRequest,
-  ToolResponse
+  ToolResponse,
+  Loop
 } from '../components';
 
 /**
@@ -54,8 +55,23 @@ import {
  * @returns The parsed output as a string
  */
 export async function epomlparse(prompt: string, variables?: Record<string, any>): Promise<string> {
+  // Set the evaluation context with the provided variables
+  setEvaluationContext(variables || {});
+  
+  // Escape template variables {{}} to avoid JSX parsing issues
+  // We'll replace them with a placeholder and restore them later
+  const templateVarPlaceholder = '__TEMPLATE_VAR__';
+  const templateVarMap: Record<string, string> = {};
+  let placeholderCounter = 0;
+  
+  const escapedPrompt = prompt.replace(/\{\{([^}]+)\}\}/g, (match) => {
+    const placeholder = `${templateVarPlaceholder}_${placeholderCounter++}`;
+    templateVarMap[placeholder] = match;
+    return placeholder;
+  });
+  
   // Transform the JSX code to JavaScript using SWC
-  const transformed = await swc.transform(prompt, {
+  const transformed = await swc.transform(escapedPrompt, {
     jsc: {
       parser: {
         syntax: 'ecmascript',
@@ -74,6 +90,12 @@ export async function epomlparse(prompt: string, variables?: Record<string, any>
       type: 'commonjs',
     },
   });
+
+  // Restore the template variables in the transformed code
+  let restoredCode = transformed.code;
+  for (const [placeholder, original] of Object.entries(templateVarMap)) {
+    restoredCode = restoredCode.replace(new RegExp(placeholder, 'g'), original);
+  }
 
   // Make createElement, Fragment and component registry functions available globally for the eval
   (global as any).createElement = createElement;
@@ -125,6 +147,7 @@ export async function epomlparse(prompt: string, variables?: Record<string, any>
   (global as any).MessageContext = MessageContext;
   (global as any).ToolRequest = ToolRequest;
   (global as any).ToolResponse = ToolResponse;
+  (global as any).Loop = Loop;
   
   // Make variables available globally for the eval
   if (variables) {
@@ -140,7 +163,7 @@ export async function epomlparse(prompt: string, variables?: Record<string, any>
   }
 
   // Evaluate the transpiled code to get the component tree
-  const component = eval(transformed.code);
+  const component = eval(restoredCode);
 
   // Clean up variables from global scope to prevent pollution
   if (variables) {

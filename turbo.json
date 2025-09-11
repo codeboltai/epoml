@@ -34,6 +34,9 @@
     "example:custom": {
       "cache": false,
       "dependsOn": ["build"]
+    },
+    "test": {
+      "dependsOn": ["build"]
     }
   }
 }

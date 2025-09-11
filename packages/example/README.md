@@ -57,6 +57,17 @@ Demonstrates the newly added components including:
 npm run example:new
 ```
 
+### 6. Tool Components Example (`src/tool-components-example.ts`)
+Demonstrates the newly added tool-related components including:
+- CodeboltToolServer and MCPToolServer for listing tool servers
+- CodeboltToolFunction and MCPToolFunction for individual tool documentation
+- Support for foreach/for loop statements in components
+
+**Run:**
+```bash
+npm run example:tool
+```
+
 ## Getting Started
 
 1. Install dependencies:
@@ -80,6 +91,9 @@ pnpm run example:test
 
 # New components example
 pnpm run example:new
+
+# Tool components example
+pnpm run example:tool
 ```
 
 ## Building
@@ -99,3 +113,4 @@ This will compile TypeScript files to the `dist/` directory.
 - `pnpm run example:demo` - Run template variables demo
 - `pnpm run example:test` - Run template variables test suite
 - `pnpm run example:new` - Run new components example
+- `pnpm run example:tool` - Run tool components example

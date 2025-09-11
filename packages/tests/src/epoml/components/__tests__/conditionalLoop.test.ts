@@ -1,4 +1,4 @@
-import { epomlparse } from '../../core/epomlparse';
+import { epomlparse } from 'epoml/core/epomlparse';
 
 describe('Conditional and Loop Rendering Tests', () => {
   test('Paragraph component with if condition (boolean true)', async () => {
@@ -14,8 +14,9 @@ describe('Conditional and Loop Rendering Tests', () => {
   });
 
   test('Paragraph component with for loop', async () => {
-    const template = `<Paragraph for="item in ['apple', 'banana', 'cherry']">{item}</Paragraph>`;
-    const result = await epomlparse(template);
+    const template = `<Paragraph for="item in items">{{item}}</Paragraph>`;
+    const variables = { items: ['apple', 'banana', 'cherry'] };
+    const result = await epomlparse(template, variables);
     expect(result).toContain('apple');
     expect(result).toContain('banana');
     expect(result).toContain('cherry');
@@ -28,8 +29,9 @@ describe('Conditional and Loop Rendering Tests', () => {
   });
 
   test('ListItem component with for loop', async () => {
-    const template = `<ListItem for="num in [1, 2, 3]">Item {num}</ListItem>`;
-    const result = await epomlparse(template);
+    const template = `<ListItem for="num in numbers">Item {{num}}</ListItem>`;
+    const variables = { numbers: [1, 2, 3] };
+    const result = await epomlparse(template, variables);
     expect(result).toContain('Item 1');
     expect(result).toContain('Item 2');
     expect(result).toContain('Item 3');
@@ -42,8 +44,9 @@ describe('Conditional and Loop Rendering Tests', () => {
   });
 
   test('Example component with for loop', async () => {
-    const template = `<Example for="demo in ['demo1', 'demo2']" title="Example {loop.index}">Content {demo}</Example>`;
-    const result = await epomlparse(template);
+    const template = `<Example for="demo in demos" title="Example {{loop.index}}">Content {{demo}}</Example>`;
+    const variables = { demos: ['demo1', 'demo2'] };
+    const result = await epomlparse(template, variables);
     expect(result).toContain('Example 0');
     expect(result).toContain('Example 1');
   });
@@ -56,7 +59,7 @@ describe('Conditional and Loop Rendering Tests', () => {
   });
 
   test('Loop rendering with variables', async () => {
-    const template = `<Paragraph for="item in items">{item}</Paragraph>`;
+    const template = `<Paragraph for="item in items">{{item}}</Paragraph>`;
     const variables = { items: ['first', 'second', 'third'] };
     const result = await epomlparse(template, variables);
     expect(result).toContain('first');
@@ -67,8 +70,8 @@ describe('Conditional and Loop Rendering Tests', () => {
   test('Nested loops', async () => {
     const template = `
       <Paragraph for="category in categories">
-        Category: {category.name}
-        <ListItem for="item in category.items">{item}</ListItem>
+        Category: {{category.name}}
+        <ListItem for="item in category.items">{{item}}</ListItem>
       </Paragraph>
     `;
     const variables = {

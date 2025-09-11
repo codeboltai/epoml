@@ -1,6 +1,6 @@
-import { Paragraph } from '../Paragraph';
-import { render } from '../../core/renderer';
-import { createElement } from '../../core/createElement';
+import { Paragraph } from 'epoml/components/Paragraph';
+import { render } from 'epoml/core/renderer';
+import { createElement } from 'epoml/core/createElement';
 
 describe('Paragraph Component', () => {
   describe('Character and Token Limits', () => {
@@ -62,7 +62,7 @@ describe('Paragraph Component', () => {
     test('applies custom truncation marker', async () => {
       const paragraph = createElement(Paragraph, { 
         charLimit: 15,
-        writerOptions: { truncateMarker: ' [...]' }
+        writerOptions: { truncateMarker: ' [...] ' }
       }, 'This is a very long paragraph.');
       const result = await render(paragraph);
       expect(result).toContain(' [...]');

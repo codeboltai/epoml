@@ -65,12 +65,15 @@ export function Paragraph(props: ParagraphProps): Component {
     }
   }
 
-  // Process children content
-  let content = children.map(child => typeof child === 'string' ? child : '').join('');
-
-  // Process template variables in content
-  const context = (props as any).context || {};
-  content = processTemplateVars(content, context);
+  // Process children content - automatically process template variables
+  let content = children.map(child => {
+    if (typeof child === 'string') {
+      // Automatically process template variables in string children
+      const context = (props as any).context || {};
+      return processTemplateVars(child, context);
+    }
+    return child;
+  }).join('');
 
   // Apply whitespace handling
   content = applyWhitespaceHandling(content, whiteSpace);

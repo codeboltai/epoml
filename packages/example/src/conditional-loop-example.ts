@@ -19,7 +19,7 @@ async function testConditionalAndLoopRendering() {
 
   // Test 3: Paragraph with for loop (with variables)
   console.log('Test 3: Paragraph with for loop (with variables)');
-  const template3 = `<Paragraph for="item in items">{item} </Paragraph>`;
+  const template3 = `<Paragraph for="item in items">{{item}} </Paragraph>`;
   const variables3 = { items: ['apple', 'banana', 'cherry'] };
   const result3 = await epomlparse(template3, variables3);
   console.log(result3);
@@ -34,7 +34,7 @@ async function testConditionalAndLoopRendering() {
 
   // Test 5: ListItem with for loop (with variables)
   console.log('Test 5: ListItem with for loop (with variables)');
-  const template5 = `<ListItem for="num in numbers">Item {num}</ListItem>`;
+  const template5 = `<ListItem for="num in numbers">Item {{num}}</ListItem>`;
   const variables5 = { numbers: [1, 2, 3] };
   const result5 = await epomlparse(template5, variables5);
   console.log(result5);
@@ -49,7 +49,7 @@ async function testConditionalAndLoopRendering() {
 
   // Test 7: Example component with for loop (with variables)
   console.log('Test 7: Example component with for loop (with variables)');
-  const template7 = `<Example for="demo in demos" title="Example {loop.index}">Content {demo}</Example>`;
+  const template7 = `<Example for="demo in demos" title="Example {{loop.index}}">Content {{demo}}</Example>`;
   const variables7 = { demos: ['demo1', 'demo2'] };
   const result7 = await epomlparse(template7, variables7);
   console.log(result7);
@@ -65,7 +65,7 @@ async function testConditionalAndLoopRendering() {
 
   // Test 9: Loop rendering with variables and loop context
   console.log('Test 9: Loop rendering with variables and loop context');
-  const template9 = `<Paragraph for="item in items">Item: {item}, Index: {loop.index}, First: {loop.first}, Last: {loop.last}</Paragraph>`;
+  const template9 = `<Paragraph for="item in items">Item: {{item}}, Index: {{loop.index}}, First: {{loop.first}}, Last: {{loop.last}}</Paragraph>`;
   const variables9 = { items: ['first', 'second', 'third'] };
   const result9 = await epomlparse(template9, variables9);
   console.log(result9);

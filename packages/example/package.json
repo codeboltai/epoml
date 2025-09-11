@@ -15,7 +15,10 @@
     "example:custom": "ts-node src/custom-component-example.ts",
     "example:new": "ts-node src/new-components-example.ts",
     "example:conditional-loop": "ts-node src/conditional-loop-example.ts",
-    "example:debug": "ts-node src/debug-template-variable.ts"
+    "example:debug": "ts-node src/debug-template-variable.ts",
+    "example:tool": "ts-node src/tool-components-example.ts",
+    "example:loop": "ts-node src/loop-test.ts",
+    "example:loop-component": "ts-node src/loop-component-example.ts"
   },
   "keywords": [],
   "author": "",
