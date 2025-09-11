@@ -20,7 +20,7 @@ async function exampleUsage() {
   // console.log('Function Result:', functionResult);
   // console.log('---');
 
-  const template = '<Introducer text="This is an introduction" />';
+  const template = '<Folder name="Test Folder" path="/test/path">Folder contents</Folder>';
   const result = await epomlparse(template);
   console.log("Result: ", result);
 }
