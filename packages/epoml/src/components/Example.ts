@@ -1,6 +1,8 @@
 import { createElement } from '../core/createElement';
 import { Component, BaseComponentProps } from '../types';
-import { escapeHtml, escapeXml, escapeXmlAttr, repeatChar } from '../utils';
+import { escapeHtml, escapeXml, escapeXmlAttr, repeatChar, processTemplateVars } from '../utils';
+import { evaluateCondition, parseLoopExpression, evaluateArrayExpression, createLoopContext } from '../utils/conditionalUtils';
+import { Fragment } from '../core/Fragment';
 
 export interface ExampleProps extends BaseComponentProps {
   /** Title for the example */
@@ -13,6 +15,9 @@ export interface ExampleProps extends BaseComponentProps {
   difficulty?: 'beginner' | 'intermediate' | 'advanced';
   /** Whether this is a best practice example */
   bestPractice?: boolean;
+  // Add conditional and loop props
+  if?: boolean | string | ((context: Record<string, any>) => boolean);
+  for?: string;
 }
 
 export function Example(props: ExampleProps): Component {
@@ -25,29 +30,75 @@ export function Example(props: ExampleProps): Component {
     syntax = 'text',
     className,
     speaker,
-    children = []
+    children = [],
+    // Extract conditional and loop props
+    if: condition,
+    for: loopExpression
   } = props;
+
+  // Handle conditional rendering
+  if (condition !== undefined) {
+    // Get the evaluation context from a global or passed context
+    const evaluationContext = (props as any).context || {};
+    const shouldRender = evaluateCondition(condition, evaluationContext);
+    if (!shouldRender) {
+      // Return an empty fragment
+      return Fragment({ children: [] }) as unknown as Component;
+    }
+  }
+
+  // Handle loop rendering
+  if (loopExpression) {
+    const evaluationContext = (props as any).context || {};
+    const loopParts = parseLoopExpression(loopExpression);
+    if (loopParts) {
+      const array = evaluateArrayExpression(loopParts.arrayExpression, evaluationContext);
+      const loopChildren: (Component | string)[] = [];
+      
+      for (let i = 0; i < array.length; i++) {
+        const item = array[i];
+        // Create a new context with loop variables
+        const loopContext = createLoopContext(evaluationContext, loopParts.itemName, item, i, array.length);
+        
+        // Create a new component instance for this iteration with the loop context
+        const loopProps = {
+          ...props,
+          for: undefined, // Remove the for prop to prevent infinite recursion
+          context: loopContext // Pass the loop context
+        };
+        
+        loopChildren.push(Example(loopProps));
+      }
+      
+      // Return a fragment with all loop children
+      return Fragment({ children: loopChildren }) as unknown as Component;
+    }
+  }
+
+  // Process template variables in title
+  const context = (props as any).context || {};
+  const processedTitle = title ? processTemplateVars(title, context) : undefined;
 
   // Generate the component based on syntax
   switch (syntax) {
     case 'markdown':
-      return generateMarkdownExample(title, description, category, difficulty, bestPractice, children, className, speaker);
+      return generateMarkdownExample(processedTitle, description, category, difficulty, bestPractice, children, className, speaker, context);
     
     case 'html':
-      return generateHtmlExample(title, description, category, difficulty, bestPractice, children, className, speaker);
+      return generateHtmlExample(processedTitle, description, category, difficulty, bestPractice, children, className, speaker, context);
     
     case 'json':
-      return generateJsonExample(title, description, category, difficulty, bestPractice, children, className, speaker);
+      return generateJsonExample(processedTitle, description, category, difficulty, bestPractice, children, className, speaker, context);
     
     case 'yaml':
-      return generateYamlExample(title, description, category, difficulty, bestPractice, children, className, speaker);
+      return generateYamlExample(processedTitle, description, category, difficulty, bestPractice, children, className, speaker, context);
     
     case 'xml':
-      return generateXmlExample(title, description, category, difficulty, bestPractice, children, className, speaker);
+      return generateXmlExample(processedTitle, description, category, difficulty, bestPractice, children, className, speaker, context);
     
     case 'text':
     default:
-      return generateTextExample(title, description, category, difficulty, bestPractice, children, className, speaker);
+      return generateTextExample(processedTitle, description, category, difficulty, bestPractice, children, className, speaker, context);
   }
 }
 
@@ -59,7 +110,8 @@ function generateMarkdownExample(
   bestPractice: boolean,
   children: (Component | string)[],
   className?: string,
-  speaker?: string
+  speaker?: string,
+  context?: Record<string, any>
 ): Component {
   // Difficulty emoji
   const difficultyEmoji = {
@@ -87,7 +139,9 @@ function generateMarkdownExample(
   // Add children content (the example content)
   if (children.length > 0) {
     const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-    result += childrenContent;
+    // Process template variables in children content
+    const processedContent = processTemplateVars(childrenContent, context || {});
+    result += processedContent;
   }
   
   return createElement('div', { className, 'data-speaker': speaker }, result);
@@ -101,7 +155,8 @@ function generateHtmlExample(
   bestPractice: boolean,
   children: (Component | string)[],
   className?: string,
-  speaker?: string
+  speaker?: string,
+  context?: Record<string, any>
 ): Component {
   // Difficulty emoji
   const difficultyEmoji = {
@@ -130,7 +185,9 @@ function generateHtmlExample(
   if (children.length > 0) {
     html += '  <div class="example-content">\n';
     const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-    html += `    ${childrenContent}\n`;
+    // Process template variables in children content
+    const processedContent = processTemplateVars(childrenContent, context || {});
+    html += `    ${processedContent}\n`;
     html += '  </div>\n';
   }
   
@@ -147,7 +204,8 @@ function generateJsonExample(
   bestPractice: boolean,
   children: (Component | string)[],
   className?: string,
-  speaker?: string
+  speaker?: string,
+  context?: Record<string, any>
 ): Component {
   const example: any = {
     difficulty,
@@ -169,7 +227,9 @@ function generateJsonExample(
   // Add children content as a string
   if (children.length > 0) {
     const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-    example.content = childrenContent;
+    // Process template variables in children content
+    const processedContent = processTemplateVars(childrenContent, context || {});
+    example.content = processedContent;
   }
   
   if (className) {
@@ -191,7 +251,8 @@ function generateYamlExample(
   bestPractice: boolean,
   children: (Component | string)[],
   className?: string,
-  speaker?: string
+  speaker?: string,
+  context?: Record<string, any>
 ): Component {
   // Difficulty emoji
   const difficultyEmoji = {
@@ -220,7 +281,9 @@ function generateYamlExample(
   // Add children content as a string
   if (children.length > 0) {
     const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-    yaml += `content: |\n${childrenContent.split('\n').map(line => `  ${line}`).join('\n')}`;
+    // Process template variables in children content
+    const processedContent = processTemplateVars(childrenContent, context || {});
+    yaml += `content: |\n${processedContent.split('\n').map((line: string) => `  ${line}`).join('\n')}`;
   }
   
   if (className) {
@@ -242,7 +305,8 @@ function generateXmlExample(
   bestPractice: boolean,
   children: (Component | string)[],
   className?: string,
-  speaker?: string
+  speaker?: string,
+  context?: Record<string, any>
 ): Component {
   let xml = `<example difficulty="${difficulty}" bestPractice="${bestPractice}"`;
   
@@ -271,7 +335,9 @@ function generateXmlExample(
   // Add children content (the example content)
   if (children.length > 0) {
     const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-    xml += `  <content>${escapeXml(childrenContent)}</content>\n`;
+    // Process template variables in children content
+    const processedContent = processTemplateVars(childrenContent, context || {});
+    xml += `  <content>${escapeXml(processedContent)}</content>\n`;
   }
   
   xml += '</example>';
@@ -287,7 +353,8 @@ function generateTextExample(
   bestPractice: boolean,
   children: (Component | string)[],
   className?: string,
-  speaker?: string
+  speaker?: string,
+  context?: Record<string, any>
 ): Component {
   // Difficulty emoji
   const difficultyEmoji = {
@@ -317,9 +384,10 @@ function generateTextExample(
     result += 'Content:\n';
     result += '-------\n\n';
     const childrenContent = children.map(child => typeof child === 'string' ? child : '').join('');
-    result += childrenContent;
+    // Process template variables in children content
+    const processedContent = processTemplateVars(childrenContent, context || {});
+    result += processedContent;
   }
   
   return createElement('div', { className, 'data-speaker': speaker }, result);
 }
-

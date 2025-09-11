@@ -12,7 +12,10 @@
     "example:basic": "ts-node src/example-usage.ts",
     "example:demo": "ts-node src/demo-variables.ts",
     "example:test": "ts-node src/test-variables.ts",
-    "example:custom": "ts-node src/custom-component-example.ts"
+    "example:custom": "ts-node src/custom-component-example.ts",
+    "example:new": "ts-node src/new-components-example.ts",
+    "example:conditional-loop": "ts-node src/conditional-loop-example.ts",
+    "example:debug": "ts-node src/debug-template-variable.ts"
   },
   "keywords": [],
   "author": "",

@@ -44,6 +44,19 @@ Complete test suite for template variable functionality including:
 npm run example:test
 ```
 
+### 5. New Components Example (`src/new-components-example.ts`)
+Demonstrates the newly added components including:
+- Text formatting components (Italic, Strikethrough, Underline)
+- Structure components (Paragraph, List, ListItem, SubContent, Newline)
+- Container components (Folder)
+- Messaging components (Conversation, AiMessage, HumanMessage, SystemMessage)
+- Utility components (ToolRequest, ToolResponse)
+
+**Run:**
+```bash
+npm run example:new
+```
+
 ## Getting Started
 
 1. Install dependencies:
@@ -64,6 +77,9 @@ pnpm run example:demo
 
 # Template variables test suite
 pnpm run example:test
+
+# New components example
+pnpm run example:new
 ```
 
 ## Building
@@ -82,3 +98,4 @@ This will compile TypeScript files to the `dist/` directory.
 - `pnpm run example:basic` - Run basic usage example
 - `pnpm run example:demo` - Run template variables demo
 - `pnpm run example:test` - Run template variables test suite
+- `pnpm run example:new` - Run new components example

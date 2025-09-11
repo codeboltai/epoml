@@ -9,6 +9,7 @@ import {
   CaptionedParagraph, 
   Code,
   Document,
+  Example,
   ExampleInput,
   ExampleOutput,
   ExampleSet,
@@ -24,7 +25,26 @@ import {
   Role,
   StepwiseInstructions,
   Table,
-  Task
+  Task,
+  // Newly added components
+  Italic,
+  Text,
+  Paragraph,
+  Strikethrough,
+  Underline,
+  Newline,
+  List,
+  ListItem,
+  SubContent,
+  Folder,
+  Webpage,
+  Conversation,
+  AiMessage,
+  HumanMessage,
+  SystemMessage,
+  MessageContext,
+  ToolRequest,
+  ToolResponse
 } from '../components';
 
 /**
@@ -69,6 +89,7 @@ export async function epomlparse(prompt: string, variables?: Record<string, any>
   (global as any).CaptionedParagraph = CaptionedParagraph;
   (global as any).Code = Code;
   (global as any).Document = Document;
+  (global as any).Example = Example;
   (global as any).ExampleInput = ExampleInput;
   (global as any).ExampleOutput = ExampleOutput;
   (global as any).ExampleSet = ExampleSet;
@@ -85,6 +106,25 @@ export async function epomlparse(prompt: string, variables?: Record<string, any>
   (global as any).StepwiseInstructions = StepwiseInstructions;
   (global as any).Table = Table;
   (global as any).Task = Task;
+  // Newly added components
+  (global as any).Italic = Italic;
+  (global as any).Text = Text;
+  (global as any).Paragraph = Paragraph;
+  (global as any).Strikethrough = Strikethrough;
+  (global as any).Underline = Underline;
+  (global as any).Newline = Newline;
+  (global as any).List = List;
+  (global as any).ListItem = ListItem;
+  (global as any).SubContent = SubContent;
+  (global as any).Folder = Folder;
+  (global as any).Webpage = Webpage;
+  (global as any).Conversation = Conversation;
+  (global as any).AiMessage = AiMessage;
+  (global as any).HumanMessage = HumanMessage;
+  (global as any).SystemMessage = SystemMessage;
+  (global as any).MessageContext = MessageContext;
+  (global as any).ToolRequest = ToolRequest;
+  (global as any).ToolResponse = ToolResponse;
   
   // Make variables available globally for the eval
   if (variables) {
