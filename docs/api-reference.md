@@ -801,6 +801,273 @@ class EPOMLVariableError extends Error {
 }
 ```
 
+## Built-in Components
+
+EPOML includes a comprehensive set of built-in components for common use cases. All components support multiple output formats and template variables.
+
+### Core Text Components
+
+#### `Text`
+Plain text content component.
+```typescript
+interface TextProps extends BaseComponentProps {
+  content?: string;
+}
+```
+
+#### `Bold`
+Bold text formatting.
+```typescript
+interface BoldProps extends BaseComponentProps {}
+```
+
+#### `Italic`
+Italic text formatting.
+```typescript
+interface ItalicProps extends BaseComponentProps {}
+```
+
+#### `Underline`
+Underlined text.
+```typescript
+interface UnderlineProps extends BaseComponentProps {}
+```
+
+#### `Strikethrough`
+Struck-through text.
+```typescript
+interface StrikethroughProps extends BaseComponentProps {}
+```
+
+#### `Paragraph`
+Paragraph-level text with conditional rendering and loops.
+```typescript
+interface ParagraphProps extends LimitedComponentProps {
+  if?: boolean | string | ((context: Record<string, any>) => boolean);
+  for?: string;
+}
+```
+
+#### `Newline`
+Line breaks and spacing control.
+```typescript
+interface NewlineProps extends BaseComponentProps {
+  count?: number;
+}
+```
+
+### Lists and Structure
+
+#### `List`
+Ordered and unordered lists.
+```typescript
+interface ListProps extends BaseComponentProps {
+  ordered?: boolean;
+  start?: number;
+}
+```
+
+#### `ListItem`
+Individual list items.
+```typescript
+interface ListItemProps extends BaseComponentProps {}
+```
+
+### Document and File System
+
+#### `Folder`
+File system folders and directories.
+```typescript
+interface FolderProps extends BaseComponentProps {
+  name?: string;
+  path?: string;
+}
+```
+
+#### `Webpage`
+Web page references with content extraction.
+```typescript
+interface WebpageProps extends BaseComponentProps {
+  url: string;
+  title?: string;
+  selector?: string;
+  extractText?: boolean;
+}
+```
+
+### Conversation and Messaging
+
+#### `Conversation`
+Message sequences and conversations.
+```typescript
+interface ConversationProps extends BaseComponentProps {
+  title?: string;
+  participants?: string[];
+}
+```
+
+#### `HumanMessage`
+Messages from human users.
+```typescript
+interface HumanMessageProps extends BaseComponentProps {
+  name?: string;
+  userId?: string;
+}
+```
+
+#### `AiMessage`
+Messages from AI models.
+```typescript
+interface AiMessageProps extends BaseComponentProps {
+  model?: string;
+  confidence?: number;
+}
+```
+
+#### `SystemMessage`
+System notifications and messages.
+```typescript
+interface SystemMessageProps extends BaseComponentProps {
+  messageType?: string;
+  priority?: 'low' | 'medium' | 'high' | 'critical';
+}
+```
+
+### Interactive Elements
+
+#### `Question`
+Questions with multiple formats.
+```typescript
+interface QuestionProps extends BaseComponentProps {
+  text: string;
+  type?: 'multiple-choice' | 'single-choice' | 'open-ended' | 'true-false' | 'rating';
+  options?: string[];
+  answer?: string | string[];
+  explanation?: string;
+  difficulty?: 'easy' | 'medium' | 'hard';
+  category?: string;
+}
+```
+
+#### `Hint`
+Hints and tips in content.
+```typescript
+interface HintProps extends BaseComponentProps {
+  text: string;
+  type?: 'tip' | 'warning' | 'note' | 'important' | 'caution';
+  title?: string;
+  topic?: string;
+  difficulty?: 'beginner' | 'intermediate' | 'advanced';
+}
+```
+
+### Examples and Learning
+
+#### `Example`
+Generic examples with categorization.
+```typescript
+interface ExampleProps extends BaseComponentProps {
+  title?: string;
+  description?: string;
+  category?: string;
+  difficulty?: 'beginner' | 'intermediate' | 'advanced';
+  bestPractice?: boolean;
+}
+```
+
+#### `Introducer`
+Introduction and context setting.
+```typescript
+interface IntroducerProps extends BaseComponentProps {
+  name?: string;
+  role?: string;
+  text: string;
+  purpose?: string;
+  tone?: 'formal' | 'casual' | 'professional' | 'friendly' | 'enthusiastic';
+}
+```
+
+### Project Management
+
+#### `Role`
+Roles with permissions and responsibilities.
+```typescript
+interface RoleProps extends BaseComponentProps {
+  name: string;
+  description?: string;
+  responsibilities?: string[];
+  permissions?: string[];
+  active?: boolean;
+}
+```
+
+### Advanced Features
+
+#### `Loop`
+Loop over arrays with context management.
+```typescript
+interface LoopProps {
+  for: string;
+  children?: (Component | string)[];
+  context?: Record<string, any>;
+}
+```
+
+### Tools and Integration
+
+#### `MCPToolFunction`
+MCP tool function definitions.
+```typescript
+interface MCPToolFunctionProps extends BaseComponentProps {
+  toolName?: string;
+  toolFunction?: string;
+  templateVars?: Record<string, any>;
+}
+```
+
+#### `ToolRequest`
+Tool usage requests.
+```typescript
+interface ToolRequestProps extends BaseComponentProps {
+  toolName?: string;
+  operation?: string;
+  parameters?: Record<string, any>;
+  templateVars?: Record<string, any>;
+}
+```
+
+#### `ToolResponse`
+Tool usage responses.
+```typescript
+interface ToolResponseProps extends BaseComponentProps {
+  toolName?: string;
+  success?: boolean;
+  result?: any;
+  error?: string;
+  templateVars?: Record<string, any>;
+}
+```
+
+### Common Props for All Components
+
+All built-in components extend `BaseComponentProps`:
+
+```typescript
+interface BaseComponentProps {
+  syntax?: Syntax;
+  className?: string;
+  speaker?: Speaker;
+  writerOptions?: WriterOptions;
+  whiteSpace?: WhitespaceHandling;
+  children?: (Component | string)[];
+}
+```
+
+Where:
+- `Syntax = 'markdown' | 'html' | 'json' | 'yaml' | 'xml' | 'text'`
+- `Speaker = 'human' | 'ai' | 'system'`
+- `WhitespaceHandling = 'pre' | 'filter' | 'trim'`
+
 ## Usage Examples
 
 ### Complete Type-Safe Example

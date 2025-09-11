@@ -4,9 +4,15 @@ EPOML comes with a rich set of built-in components for common use cases. Each co
 
 ## Available Components
 
-### Core Components
+### Core Text Components
 - **[Header](./Header.md)** - Create headers at different levels (h1-h6)
 - **[Bold](./Bold.md)** - Emphasize text with bold formatting  
+- **[Italic](./Italic.md)** - Emphasize text with italic formatting 🆕
+- **[Underline](./Underline.md)** - Underline text for emphasis 🆕
+- **[Strikethrough](./Strikethrough.md)** - Strike through text to show deletions 🆕
+- **[Text](./Text.md)** - Plain text content component 🆕
+- **[Paragraph](./Paragraph.md)** - Paragraph-level text with conditional rendering and loops 🆕
+- **[Newline](./Newline.md)** - Insert line breaks and spacing control 🆕
 - **[Code](./Code.md)** - Display code blocks with syntax highlighting
 - **[Inline](./Inline.md)** - Inline formatting and content
 
@@ -14,13 +20,18 @@ EPOML comes with a rich set of built-in components for common use cases. Each co
 - **[Document](./Document.md)** - Full document structures with metadata ✨
 - **[CaptionedParagraph](./CaptionedParagraph.md)** - Paragraphs with customizable captions
 - **[FileTree](./FileTree.md)** - Display directory structures as trees
+- **[Folder](./Folder.md)** - Represent file system folders and directories 🆕
+- **[Webpage](./Webpage.md)** - Reference web pages with URLs and content extraction 🆕
 
-### Data Presentation  
+### Lists and Data Presentation  
+- **[List](./List.md)** - Create ordered and unordered lists 🆕
+- **[ListItem](./ListItem.md)** - Individual list items with fine-grained control 🆕
 - **[Table](./Table.md)** - Create tables with headers and data rows
 - **[DataObject](./DataObject.md)** - Display structured object data with template variables ✨
 - **[Image](./Image.md)** - Display images with captions and positioning
 
 ### Example Components
+- **[Example](./Example.md)** - Generic examples with categories and difficulty levels 🆕
 - **[ExampleInput](./ExampleInput.md)** - Show example inputs with template variables ✨
 - **[ExampleOutput](./ExampleOutput.md)** - Show example outputs with template variables ✨ 
 - **[ExampleSet](./ExampleSet.md)** - Group related examples with template variables ✨
@@ -30,18 +41,38 @@ EPOML comes with a rich set of built-in components for common use cases. Each co
 
 ### Interactive & Media
 - **[Audio](./Audio.md)** - Include audio references and transcriptions
-- **[Question](./Question.md)** - Create questions with multiple formats
-- **[Hint](./Hint.md)** - Provide hints and tips in content
+- **[Question](./Question.md)** - Create questions with multiple formats 🆕
+- **[Hint](./Hint.md)** - Provide hints and tips in content 🆕
 
-### Project Management
+### Conversation & Messaging
+- **[Conversation](./Conversation.md)** - Organize message sequences and conversations 🆕
+- **[HumanMessage](./HumanMessage.md)** - Messages from human users 🆕
+- **[AiMessage](./AiMessage.md)** - Messages from AI models 🆕
+- **[SystemMessage](./SystemMessage.md)** - System notifications and messages 🆕
+- **[MessageContext](./MessageContext.md)** - Provide context for conversations 🆕
+
+### Tools & Integration
+- **[ToolRequest](./ToolRequest.md)** - Tool usage requests 🆕
+- **[ToolResponse](./ToolResponse.md)** - Tool usage responses 🆕
+- **[MCPToolFunction](./MCPToolFunction.md)** - MCP tool function definitions 🆕
+- **[MCPToolServer](./MCPToolServer.md)** - MCP tool server configurations 🆕
+- **[CodeboltToolFunction](./CodeboltToolFunction.md)** - Codebolt tool functions 🆕
+- **[CodeboltToolServer](./CodeboltToolServer.md)** - Codebolt tool servers 🆕
+
+### Project Management & Organization
 - **[Task](./Task.md)** - Task management and tracking components with template variables ✨
-- **[Role](./Role.md)** - Define roles with permissions and responsibilities
+- **[Role](./Role.md)** - Define roles with permissions and responsibilities 🆕
 
-### Instructional
-- **[Introducer](./Introducer.md)** - Introduction and context setting
-- **[StepwiseInstructions](./StepwiseInstructions.md)** - Step-by-step instruction guides
+### Instructional & Learning
+- **[Introducer](./Introducer.md)** - Introduction and context setting 🆕
+- **[StepwiseInstructions](./StepwiseInstructions.md)** - Step-by-step instruction guides 🆕
+
+### Advanced Features
+- **[Loop](./Loop.md)** - Loop over arrays with context management 🆕
+- **[SubContent](./SubContent.md)** - Nested content with hierarchical structure 🆕
 
 ✨ = Recently enhanced with template variable support and improved functionality
+🆕 = New components added to documentation
 
 ## Common Props
 
