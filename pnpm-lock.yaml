@@ -55,13 +55,13 @@ importers:
       '@swc/core':
         specifier: ^1.13.5
         version: 1.13.5
+      epoml:
+        specifier: workspace:*
+        version: link:../epoml
     devDependencies:
       '@types/jest':
         specifier: ^29.5.0
         version: 29.5.14
-      epoml:
-        specifier: workspace:*
-        version: link:../epoml
       jest:
         specifier: ^29.5.0
         version: 29.7.0(@types/node@24.3.1)(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@24.3.1)(typescript@5.9.2))

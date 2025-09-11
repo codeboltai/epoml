@@ -1,3 +1,30 @@
+import { Component } from '../types';
+import { Fragment } from './Fragment';
+import { evaluateCondition } from '../utils/conditionalUtils';
+import { processTemplateVars } from '../utils';
+import { getComponent } from './componentRegistry';
+import { Example } from '../components/Example';
+import { Loop } from '../components/Loop';
+
+// Evaluation context for conditional rendering and loops
+let evaluationContext: Record<string, any> = {};
+
+/**
+ * Set the evaluation context for conditional rendering and loops
+ * @param context The context to set
+ */
+export function setEvaluationContext(context: Record<string, any>): void {
+  evaluationContext = context;
+}
+
+/**
+ * Get the current evaluation context
+ * @returns The current evaluation context
+ */
+export function getEvaluationContext(): Record<string, any> {
+  return evaluationContext;
+}
+
 /**
  * Render a component tree to a string
  * @param component The component to render

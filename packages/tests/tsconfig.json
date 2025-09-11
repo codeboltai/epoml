@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "commonjs",
-    "lib": ["ES2020"],
+    "lib": ["ES2020", "dom"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -11,7 +11,6 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src",
     "composite": true,
     "incremental": true,
     "resolveJsonModule": true,
@@ -21,6 +20,6 @@
       "epoml/*": ["../epoml/src/*"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../epoml/src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
