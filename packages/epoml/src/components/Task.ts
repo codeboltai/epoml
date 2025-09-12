@@ -34,7 +34,7 @@ export function Task(props: TaskProps): Component {
     dueDate,
     blocked = false,
     templateVars = {},
-    syntax = 'text',
+    syntax = 'markdown',
     className,
     speaker,
     children = []

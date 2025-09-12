@@ -25,7 +25,7 @@ export function Table(props: TableProps): Component {
         bordered = false,
         striped = false,
         align = [],
-        syntax = 'text',
+        syntax = 'markdown',
         className,
         speaker,
         children = []

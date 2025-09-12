@@ -21,7 +21,7 @@ export function Hint(props: HintProps): Component {
     title,
     topic,
     difficulty = 'beginner',
-    syntax = 'text',
+    syntax = 'markdown',
     className,
     speaker,
     children = []

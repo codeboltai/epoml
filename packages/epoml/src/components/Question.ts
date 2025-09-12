@@ -27,7 +27,7 @@ export function Question(props: QuestionProps): Component {
     explanation,
     difficulty = 'medium',
     category,
-    syntax = 'text',
+    syntax = 'markdown',
     className,
     speaker,
     children = []
