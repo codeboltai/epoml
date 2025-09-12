@@ -20,7 +20,10 @@ async function exampleUsage() {
   // console.log('Function Result:', functionResult);
   // console.log('---');
 
-  const template = '<Question text="What is EPOML?" answer="A markup language" />';
+  const template = `<List>
+        <ListItem>First item</ListItem>
+        <ListItem>Second item</ListItem>
+      </List>`;
   const result = await epomlparse(template);
   console.log("Result: ", result);
 }

@@ -18,8 +18,24 @@ export function List(props: ListProps): Component {
     children = []
   } = props;
 
-  // Process children content
-  const items = children.map(child => typeof child === 'string' ? child : '').filter(item => item.trim() !== '');
+  // Process children content - handle both string and ListItem components
+  const items = children.map(child => {
+    if (typeof child === 'string') {
+      return child.trim();
+    } else if (typeof child === 'object' && child !== null && 'type' in child) {
+      // Handle ListItem components
+      if (child.type === 'listitem' || child.type === 'item' || child.type === 'li') {
+        // Extract content from ListItem children
+        if (Array.isArray(child.children)) {
+          return child.children.map(c => typeof c === 'string' ? c : '').join('').trim();
+        }
+        return '';
+      }
+      // For other components, convert to string
+      return typeof child === 'object' ? JSON.stringify(child) : String(child);
+    }
+    return String(child);
+  }).filter(item => item !== '');
 
   // Generate the component based on syntax
   switch (syntax) {
@@ -51,10 +67,9 @@ function generateMarkdownList(
   className?: string,
   speaker?: string
 ): Component {
-  const prefix = ordered ? (start ? `${start}. ` : '1. ') : '- ';
   const listItems = items.map((item, index) => {
-    const itemPrefix = ordered && start ? `${start + index}. ` : prefix;
-    return `${itemPrefix}${item}`;
+    const prefix = ordered ? (start ? `${start + index}. ` : `${index + 1}. `) : '- ';
+    return `${prefix}${item}`;
   });
   
   return createElement('div', { className, 'data-speaker': speaker }, listItems.join('\n'));
