@@ -18,21 +18,17 @@ export function List(props: ListProps): Component {
     children = []
   } = props;
 
-  // Process children content - handle both string and ListItem components
+  // Process children content - for List component, we extract content from ListItem children
   const items = children.map(child => {
     if (typeof child === 'string') {
       return child.trim();
-    } else if (typeof child === 'object' && child !== null && 'type' in child) {
-      // Handle ListItem components
-      if (child.type === 'listitem' || child.type === 'item' || child.type === 'li') {
-        // Extract content from ListItem children
-        if (Array.isArray(child.children)) {
-          return child.children.map(c => typeof c === 'string' ? c : '').join('').trim();
-        }
-        return '';
+    } else if (typeof child === 'object' && child !== null && 'children' in child) {
+      // For ListItem components, extract content from children
+      if (Array.isArray(child.children)) {
+        // Join all string children of the ListItem
+        return child.children.map(c => typeof c === 'string' ? c : '').join('').trim();
       }
-      // For other components, convert to string
-      return typeof child === 'object' ? JSON.stringify(child) : String(child);
+      return '';
     }
     return String(child);
   }).filter(item => item !== '');

@@ -160,11 +160,6 @@ export async function render(component: Component | string): Promise<string> {
     case 'br':
       return '\n';
     
-    case 'list':
-    case 'ul':
-      const listContent = (await Promise.all(component.children.map(render))).join('');
-      return `${listContent}`;
-    
     case 'listitem':
     case 'item':
     case 'li':
