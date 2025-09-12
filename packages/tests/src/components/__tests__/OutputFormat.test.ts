@@ -22,13 +22,13 @@ describe('OutputFormat Component', () => {
     const template = '<OutputFormat type="json" description="JSON format" schema={{type: "object"}} />';
     const result = await testComponent(template);
     expect(result).toContain('### Schema\
-\
-```json\
-{\
-  "type": "object"\
-}\
-```');
-  });
+  \
+  ```json\
+  {\
+    "type": "object"\
+  }\
+  ```');
+    });
 
   test('should render preferred output format', async () => {
     const template = '<OutputFormat type="json" description="JSON format" preferred={true} />';
