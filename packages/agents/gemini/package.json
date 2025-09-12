@@ -1,0 +1,28 @@
+{
+  "name": "@epoml/gemini-agent",
+  "version": "1.0.0",
+  "description": "Gemini agent for EPOML",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node render-poml.ts",
+    "render": "ts-node render-poml.ts"
+  },
+  "keywords": [
+    "epoml",
+    "agent",
+    "gemini"
+  ],
+  "author": "EPOML Team",
+  "license": "MIT",
+  "dependencies": {
+    "epoml": "workspace:*",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.1"
+  }
+}

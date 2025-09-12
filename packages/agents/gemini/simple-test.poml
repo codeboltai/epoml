@@ -1,0 +1,7 @@
+<Document 
+  title="Simple Test"
+  author="Test Author"
+>
+  <Paragraph>This is a simple paragraph.</Paragraph>
+  <Paragraph>This is another paragraph.</Paragraph>
+</Document>
