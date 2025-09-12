@@ -20,10 +20,7 @@ async function exampleUsage() {
   // console.log('Function Result:', functionResult);
   // console.log('---');
 
-  const template = `<List>
-        <ListItem>First item</ListItem>
-        <ListItem>Second item</ListItem>
-      </List>`;
+  const template = `<DataObject data={{key: "value"}} />`;
   const result = await epomlparse(template);
   console.log("Result: ", result);
 }
