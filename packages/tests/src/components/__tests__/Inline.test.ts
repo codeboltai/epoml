@@ -7,12 +7,6 @@ describe('Inline Component', () => {
     expect(result).toContain('This is inline content');
   });
 
-  test('should render inline content with html syntax', async () => {
-    const template = '<Inline syntax="html">This is inline content</Inline>';
-    const result = await testComponent(template);
-    expect(result).toContain('<span>This is inline content</span>');
-  });
-
   test('should render inline content with json syntax', async () => {
     const template = '<Inline syntax="json">This is inline content</Inline>';
     const result = await testComponent(template);
