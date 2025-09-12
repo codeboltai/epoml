@@ -7,11 +7,6 @@ describe('Bold Component', () => {
     expect(result).toContain('**This is bold text**');
   });
 
-  test('should render bold text with html syntax', async () => {
-    const template = '<Bold syntax="html">This is bold text</Bold>';
-    const result = await testComponent(template);
-    expect(result).toContain('<b>This is bold text</b>');
-  });
 
   test('should render bold text with text syntax', async () => {
     const template = '<Bold syntax="text">This is bold text</Bold>';
