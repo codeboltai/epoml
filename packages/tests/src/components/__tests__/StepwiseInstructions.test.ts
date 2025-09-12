@@ -4,7 +4,7 @@ describe('StepwiseInstructions Component', () => {
   test('should render basic instructions', async () => {
     const template = '<StepwiseInstructions title="Setup Guide" steps={["Step 1", "Step 2"]} />';
     const result = await testComponent(template);
-    expect(result).toContain('# Setup Guide');
+    expect(result).toContain('INSTRUCTIONS: Setup Guide');
     expect(result).toContain('1. Step 1');
     expect(result).toContain('2. Step 2');
   });

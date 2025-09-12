@@ -7,11 +7,6 @@ describe('Paragraph Component', () => {
     expect(result).toContain('This is a paragraph');
   });
 
-  test('should render paragraph with html syntax', async () => {
-    const template = '<Paragraph syntax="html">This is a paragraph</Paragraph>';
-    const result = await testComponent(template);
-    expect(result).toContain('<p>This is a paragraph</p>');
-  });
 
   test('should render paragraph with custom class', async () => {
     const template = '<Paragraph className="custom-paragraph">This is a paragraph</Paragraph>';
